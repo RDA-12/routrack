@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:routrack/common/common.dart';
 
 void main() {
+  initializeDependencies();
   runApp(const RoutrackApp());
 }
 
