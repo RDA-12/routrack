@@ -24,6 +24,8 @@ import 'package:routrack/routine/domain/domain.dart' as _i547;
 import 'package:routrack/routine/domain/repositories/repositories.dart'
     as _i541;
 import 'package:routrack/routine/domain/use_cases/create_routine.dart' as _i844;
+import 'package:routrack/routine/presentation/bloc/routine_mutation_bloc.dart'
+    as _i142;
 import 'package:uuid/uuid.dart' as _i706;
 
 const String _prod = 'prod';
@@ -67,6 +69,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i844.CreateRoutineUseCase>(
       () => _i844.CreateRoutineUseCase(
         routineRepository: gh<_i541.RoutineRepository>(),
+      ),
+      registerFor: {_prod},
+    );
+    gh.factory<_i142.RoutineMutationBloc>(
+      () => _i142.RoutineMutationBloc(
+        createRoutineUseCase: gh<_i547.CreateRoutineUseCase>(),
       ),
       registerFor: {_prod},
     );

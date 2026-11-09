@@ -20,6 +20,7 @@ import 'package:routrack/routine/routine.dart' as _i617;
 import 'package:uuid/uuid.dart' as _i706;
 
 import '../routine/data/repositories/routine_repository_mocks.dart' as _i212;
+import '../routine/domain/use_cases/routine_use_cases_mock.dart' as _i170;
 import 'app_clock_mock.dart' as _i788;
 import 'database/app_database_mock.dart' as _i879;
 import 'external_module_mock.dart' as _i888;
@@ -36,6 +37,10 @@ extension GetItInjectableX on _i174.GetIt {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final appDatabaseMockModule = _$AppDatabaseMockModule();
     final externalModule = _$ExternalModule();
+    gh.lazySingleton<_i617.CreateRoutineUseCase>(
+      () => _i170.MockCreateRoutineUseCase(),
+      registerFor: {_test},
+    );
     gh.lazySingleton<_i181.UidGenerator>(
       () => _i247.MockUidGenerator(),
       registerFor: {_test},
