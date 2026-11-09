@@ -67,7 +67,7 @@ void main() {
             .thenThrow(exception);
         final result = await repository.save(params);
 
-        result.expectHas(UnexpectedException(exception: exception));
+        result.expectFailedWith(UnexpectedException(exception: exception));
       });
     });
   });

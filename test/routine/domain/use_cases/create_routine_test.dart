@@ -55,7 +55,7 @@ void main() {
 
       final result = await createRoutineUseCase(params);
 
-      result.expectHas(AppException.test());
+      result.expectFailedWith(AppException.test());
     });
   });
 }
