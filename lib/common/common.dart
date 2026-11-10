@@ -4,4 +4,7 @@ export 'database/database.dart';
 export 'di.dart';
 export 'presentation/presentation.dart';
 export 'repository_mixin.dart';
+export 'router/router.dart';
+export 'theme/theme.dart';
 export 'uid_generator.dart';
+export 'widgets/widgets.dart';

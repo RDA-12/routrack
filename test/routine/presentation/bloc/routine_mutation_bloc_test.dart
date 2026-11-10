@@ -77,7 +77,7 @@ void main() {
           const RoutineMutationState(isCreating: true),
           RoutineMutationState(
             notice: FailedNoticeUI(
-              data: params,
+              data: Routine(id: 'failed', name: params.name),
               operation: .create,
               exception: AppException.test(),
             ),
