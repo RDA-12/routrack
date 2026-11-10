@@ -41,6 +41,7 @@ class RoutineMutationBloc
               data: Routine(
                 id: 'failed',
                 name: event.params.name,
+                schedules: const [],
               ),
               operation: .create,
               exception: exception,

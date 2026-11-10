@@ -30,8 +30,22 @@ extension CreateRoutineMapper on CreateRoutineDBParams {
 
 /// Mapper to map [RoutineTableData] to [Routine]
 extension RoutineMapper on RoutineTableData {
-  /// Return [Routine] object for this
-  Routine toDomain() {
-    return Routine(id: id, name: name);
+  /// Return [Routine] object of this
+  Routine toDomain({
+    required List<RoutineSchedule> schedules,
+  }) {
+    return Routine(id: id, name: name, schedules: schedules);
+  }
+}
+
+/// Mapper to map [ScheduleTableData] to [RoutineSchedule]
+extension ScheduleRoutineMapper on ScheduleTableData {
+  /// Return [RoutineSchedule] of this
+  RoutineSchedule toDomain() {
+    return RoutineSchedule(
+      id: id,
+      routineId: routineId,
+      recurrence: recurrence,
+    );
   }
 }

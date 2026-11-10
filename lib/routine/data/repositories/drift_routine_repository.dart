@@ -24,7 +24,7 @@ final class DriftRoutineRepository implements RoutineRepository {
     try {
       maybeThrowException(this, Invocation.method(#save, [params]));
       final now = _clock.getCurrentDateTime();
-      final newRoutineDB = await _db.transaction(() async {
+      final (newRoutineDB, schedule) = await _db.transaction(() async {
         final newRoutineDB = await _db
             .into(_db.routineTable)
             .insertReturning(
@@ -33,18 +33,20 @@ final class DriftRoutineRepository implements RoutineRepository {
                 createdAt: now,
               ),
             );
-        await _db
+        final schedule = await _db
             .into(_db.scheduleTable)
-            .insert(
+            .insertReturning(
               params.toScheduleDatabase(
                 id: _uidGenerator.generateUid(),
                 routineId: newRoutineDB.id,
                 createdAt: now,
               ),
             );
-        return newRoutineDB;
+        return (newRoutineDB, schedule);
       });
-      return AppResult.success(newRoutineDB.toDomain());
+      return AppResult.success(
+        newRoutineDB.toDomain(schedules: [schedule.toDomain()]),
+      );
     } on Exception catch (e) {
       return AppResult.failed(UnexpectedException(exception: e));
     }

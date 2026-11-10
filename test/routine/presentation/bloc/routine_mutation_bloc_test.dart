@@ -80,7 +80,11 @@ void main() {
           const RoutineMutationState(isCreating: true),
           RoutineMutationState(
             notice: FailedNoticeUI(
-              data: Routine(id: 'failed', name: params.name),
+              data: Routine(
+                id: 'failed',
+                name: params.name,
+                schedules: const [],
+              ),
               operation: .create,
               exception: AppException.test(),
             ),

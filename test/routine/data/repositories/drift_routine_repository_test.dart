@@ -10,6 +10,7 @@ import '../../../helper.dart';
 import '../../domain/entities/routine_mocks.dart';
 
 void main() {
+  const uid = 'uid';
   final now = DateTime.now().toUtc();
   final params = CreateRoutineDBParams(
     name: mockRoutine.name,
@@ -25,7 +26,7 @@ void main() {
   setUp(() {
     database = di<AppDatabase>();
     uidGenerator = di<UidGenerator>();
-    when(() => uidGenerator.generateUid()).thenReturn(mockRoutine.id);
+    when(() => uidGenerator.generateUid()).thenReturn(uid);
     appClock = di<AppClock>();
     when(() => appClock.getCurrentDateTime()).thenReturn(now);
 
@@ -51,7 +52,20 @@ void main() {
         expect(result, isA<AppResultSuccess<Routine>>());
 
         final data = (result as AppResultSuccess<Routine>).data;
-        expect(data, mockRoutine);
+        expect(
+          data,
+          Routine(
+            id: uid,
+            name: params.name,
+            schedules: [
+              RoutineSchedule(
+                id: uid,
+                routineId: uid,
+                recurrence: params.recurrence,
+              ),
+            ],
+          ),
+        );
 
         final query = database.select(database.routineTable)
           ..where((tbl) => tbl.id.equals(data.id));
