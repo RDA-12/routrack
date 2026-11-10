@@ -16,12 +16,12 @@ enum OperationType {
 /// Representing data that need to be showed to user
 ///
 /// Typically, in a dialog/toast
-sealed class NoticeUI extends Equatable {
+sealed class NoticeUI<T> extends Equatable {
   const new();
 }
 
 /// Notice changes on [T] from [before] to [after]
-final class UpdatedNoticeUI<T> extends NoticeUI {
+final class UpdatedNoticeUI<T> extends NoticeUI<T> {
   /// Creates new [UpdatedNoticeUI]
   const new({required this.before, required this.after});
 
@@ -36,7 +36,7 @@ final class UpdatedNoticeUI<T> extends NoticeUI {
 }
 
 /// Notice [data] has been deleted
-final class DeletedNoticeUI<T> extends NoticeUI {
+final class DeletedNoticeUI<T> extends NoticeUI<T> {
   /// Creates new [DeletedNoticeUI]
   const new({required this.data});
 
@@ -48,7 +48,7 @@ final class DeletedNoticeUI<T> extends NoticeUI {
 }
 
 /// Notice [data] has been created
-final class CreatedNoticeUI<T> extends NoticeUI {
+final class CreatedNoticeUI<T> extends NoticeUI<T> {
   /// Creates new [CreatedNoticeUI]
   const new({required this.data});
 
@@ -60,7 +60,7 @@ final class CreatedNoticeUI<T> extends NoticeUI {
 }
 
 /// Notice that operation [operation] failed on [T] data, throwing [exception]
-final class FailedNoticeUI<T> extends NoticeUI {
+final class FailedNoticeUI<T> extends NoticeUI<T> {
   /// Creates new [FailedNoticeUI]
   const new({
     required this.data,
@@ -70,7 +70,7 @@ final class FailedNoticeUI<T> extends NoticeUI {
 
   /// Data used by the [operation]
   ///
-  /// Might use params from the use case
+  /// Ceates placeholder data of [T] from use case params
   /// when [operation] is [OperationType.create]
   final T data;
 

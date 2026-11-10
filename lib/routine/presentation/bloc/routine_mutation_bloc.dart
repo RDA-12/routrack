@@ -38,7 +38,10 @@ class RoutineMutationBloc
         emit(
           RoutineMutationState(
             notice: FailedNoticeUI(
-              data: event.params,
+              data: Routine(
+                id: 'failed',
+                name: event.params.name,
+              ),
               operation: .create,
               exception: exception,
             ),

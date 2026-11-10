@@ -12,7 +12,7 @@ final class RoutineMutationState extends Equatable {
   final bool isCreating;
 
   /// Notice that need to be informed to user
-  final NoticeUI? notice;
+  final NoticeUI<Routine>? notice;
 
   @override
   List<Object?> get props => [isCreating, notice];
