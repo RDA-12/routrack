@@ -3,13 +3,13 @@ import 'package:drift_flutter/drift_flutter.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:routrack/common/database/tables/tables.dart';
+import 'package:routrack/common/database/database.dart';
 
 part 'app_database.g.dart';
 
 @LazySingleton(env: [Environment.prod])
 /// Main database for the app
-@DriftDatabase(tables: [RoutineTable])
+@DriftDatabase(tables: [RoutineTable, ScheduleTable])
 class AppDatabase extends _$AppDatabase {
   /// Creates new [AppDatabase]
   factory() => AppDatabase._internal(_openConnection());
@@ -22,6 +22,15 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   int get schemaVersion => 1;
+
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(
+      beforeOpen: (_) async {
+        await customStatement('PRAGMA foreign_keys = ON');
+      },
+    );
+  }
 
   static QueryExecutor _openConnection() {
     return driftDatabase(

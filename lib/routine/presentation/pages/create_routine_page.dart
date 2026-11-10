@@ -66,6 +66,9 @@ class _CreateRoutinePageState extends State<CreateRoutinePage> {
                                   'There is unexpected failure happened. '
                                   'We will take a look into that shortly. '
                                   'Please, try again later';
+                            case _:
+                              // TODO(RDA12): Handle this case.
+                              throw UnimplementedError();
                           }
                           controller.transitionToResult(
                             LoadingOverlayResult(

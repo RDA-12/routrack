@@ -49,3 +49,30 @@ final class UnexpectedException extends AppException {
   @override
   List<Object?> get props => super.props + [exception];
 }
+
+/// List of entities within this app
+enum Entity {
+  /// Routine
+  routine,
+
+  /// Schedule
+  schedule,
+}
+
+/// Thrown when requedted entity not found in database
+final class NotFoundException extends AppException {
+  /// Creates new [NotFoundException]
+  const new({
+    required this.entity,
+    required this.id,
+  }) : super('$entity with ID $id is not found');
+
+  /// requested ID
+  final String id;
+
+  /// requested entity type
+  final Entity entity;
+
+  @override
+  List<Object?> get props => super.props + [id, entity];
+}
