@@ -20,17 +20,30 @@ final class DriftRoutineRepository implements RoutineRepository {
   final AppClock _clock;
 
   @override
-  Future<AppResult<Routine>> save(CreateRoutineParams params) async {
+  Future<AppResult<Routine>> save(CreateRoutineDBParams params) async {
     try {
       maybeThrowException(this, Invocation.method(#save, [params]));
-      final newRoutineDB = await _db
-          .into(_db.routineTable)
-          .insertReturning(
-            params.toDatabase(
-              id: _uidGenerator.generateUid(),
-              createdAt: _clock.getCurrentDateTime(),
-            ),
-          );
+      final now = _clock.getCurrentDateTime();
+      final newRoutineDB = await _db.transaction(() async {
+        final newRoutineDB = await _db
+            .into(_db.routineTable)
+            .insertReturning(
+              params.toRoutineDatabase(
+                id: _uidGenerator.generateUid(),
+                createdAt: now,
+              ),
+            );
+        await _db
+            .into(_db.scheduleTable)
+            .insert(
+              params.toScheduleDatabase(
+                id: _uidGenerator.generateUid(),
+                routineId: newRoutineDB.id,
+                createdAt: now,
+              ),
+            );
+        return newRoutineDB;
+      });
       return AppResult.success(newRoutineDB.toDomain());
     } on Exception catch (e) {
       return AppResult.failed(UnexpectedException(exception: e));

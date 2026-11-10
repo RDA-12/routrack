@@ -2,9 +2,9 @@ import 'package:drift/drift.dart';
 import 'package:routrack/common/database/converters/converters.dart';
 import 'package:routrack/common/database/tables/routine_table.dart';
 import 'package:routrack/common/database/tables/table_mixin.dart';
-import 'package:routrack/schedule/schedule.dart';
+import 'package:routrack/routine/routine.dart';
 
-/// Drift table definition for [Schedule]
+/// Drift table definition for [RoutineSchedule]
 class ScheduleTable extends Table with IDMixin, TimestampMixin {
   @override
   String? get tableName => 'schedules';

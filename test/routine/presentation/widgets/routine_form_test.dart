@@ -104,7 +104,10 @@ void main() {
           await enterName('name', tester: tester);
           await tapSaveButton(tester);
 
-          expect(params, const CreateRoutineParams(name: 'name'));
+          expect(
+            params,
+            const CreateRoutineParams(name: 'name', days: {}),
+          );
         },
       );
     });

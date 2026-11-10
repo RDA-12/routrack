@@ -59,7 +59,10 @@ class _RoutineFormState extends State<RoutineForm> {
 
                     final name = nameController.text.trim();
                     widget.onRoutineSaved!(
-                      CreateRoutineParams(name: name),
+                      CreateRoutineParams(
+                        name: name,
+                        days: const {},
+                      ),
                     );
                   },
             child: const Text('Save'),

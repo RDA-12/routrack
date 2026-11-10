@@ -14,7 +14,10 @@ import '../../../helper.dart';
 import '../../domain/entities/routine_mocks.dart';
 
 void main() {
-  const params = CreateRoutineParams(name: 'name');
+  const params = CreateRoutineParams(
+    name: 'name',
+    days: {.mon, .tue},
+  );
   late RoutineMutationBloc routineMutationBloc;
 
   setUpAll(() {

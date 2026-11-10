@@ -11,12 +11,18 @@ import '../entities/routine_mocks.dart';
 void main() {
   const params = CreateRoutineParams(
     name: 'name',
+    days: {.mon, .tue},
+  );
+  final dbParams = CreateRoutineDBParams(
+    name: params.name,
+    recurrence: const ['RRULE:FREQ=DAILY;BYDAY=MO,TU'],
   );
   late RoutineRepository mockRoutineRepository;
   late CreateRoutineUseCase createRoutineUseCase;
 
   setUpAll(() {
     registerFallbackValue(params);
+    registerFallbackValue(dbParams);
     initializeMockDependencies();
   });
 
@@ -36,9 +42,9 @@ void main() {
 
   group('CreateRoutineUseCase', () {
     test('calls RoutineRepository.save once with correct params', () async {
-      await mockRoutineRepository.save(params);
+      await createRoutineUseCase(params);
 
-      verify(() => mockRoutineRepository.save(params)).called(1);
+      verify(() => mockRoutineRepository.save(dbParams)).called(1);
     });
 
     test('returns success with correct data '
@@ -50,7 +56,7 @@ void main() {
 
     test('returns failed with correct exception '
         'when RoutineRepository.save failed', () async {
-      when(() => mockRoutineRepository.save(params))
+      when(() => mockRoutineRepository.save(dbParams))
           .thenAnswer((_) async => AppResult.failed(AppException.test()));
 
       final result = await createRoutineUseCase(params);

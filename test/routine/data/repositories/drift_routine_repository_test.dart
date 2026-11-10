@@ -11,7 +11,10 @@ import '../../domain/entities/routine_mocks.dart';
 
 void main() {
   final now = DateTime.now().toUtc();
-  final params = CreateRoutineParams(name: mockRoutine.name);
+  final params = CreateRoutineDBParams(
+    name: mockRoutine.name,
+    recurrence: const ['RRULE:FREQ=DAILY;BYDAY=MO,TU'],
+  );
   late AppDatabase database;
   late UidGenerator uidGenerator;
   late AppClock appClock;
@@ -41,7 +44,8 @@ void main() {
 
   group('DriftRoutineDatabase', () {
     group('Save', () {
-      test('returns success and saves correct routine when success', () async {
+      test('returns success and saves correct routine '
+          'and schedule when success', () async {
         final result = await repository.save(params);
 
         expect(result, isA<AppResultSuccess<Routine>>());
@@ -57,6 +61,16 @@ void main() {
         expect(row!.name, params.name);
         expect(row.createdAt, now);
         expect(row.updatedAt, now);
+
+        final scheduleQuery = database.select(database.scheduleTable)
+          ..where((tbl) => tbl.routineId.equals(data.id));
+        final scheduleRow = await scheduleQuery.getSingleOrNull();
+
+        expect(scheduleRow, isNotNull);
+        expect(scheduleRow!.routineId, row.id);
+        expect(scheduleRow.recurrence, params.recurrence);
+        expect(scheduleRow.createdAt, now);
+        expect(scheduleRow.updatedAt, now);
       });
 
       test('returns failed with correct exception '

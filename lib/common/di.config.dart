@@ -26,13 +26,6 @@ import 'package:routrack/routine/domain/repositories/repositories.dart'
 import 'package:routrack/routine/domain/use_cases/create_routine.dart' as _i844;
 import 'package:routrack/routine/presentation/bloc/routine_mutation_bloc.dart'
     as _i142;
-import 'package:routrack/schedule/data/repositories/drift_schedule_repository.dart'
-    as _i216;
-import 'package:routrack/schedule/domain/domain.dart' as _i907;
-import 'package:routrack/schedule/domain/repositories/repositories.dart'
-    as _i509;
-import 'package:routrack/schedule/domain/use_cases/create_schedule_use_case.dart'
-    as _i1069;
 import 'package:uuid/uuid.dart' as _i706;
 
 const String _prod = 'prod';
@@ -65,25 +58,11 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i181.UidGenerator(gh<_i706.Uuid>()),
       registerFor: {_prod},
     );
-    gh.lazySingleton<_i907.ScheduleRepository>(
-      () => _i216.DriftScheduleRepository(
-        db: gh<_i336.AppDatabase>(),
-        uidGenerator: gh<_i336.UidGenerator>(),
-        clock: gh<_i336.AppClock>(),
-      ),
-      registerFor: {_prod},
-    );
     gh.lazySingleton<_i547.RoutineRepository>(
       () => _i85.DriftRoutineRepository(
         db: gh<_i336.AppDatabase>(),
         uidGenerator: gh<_i336.UidGenerator>(),
         clock: gh<_i336.AppClock>(),
-      ),
-      registerFor: {_prod},
-    );
-    gh.lazySingleton<_i1069.CreateScheduleUseCase>(
-      () => _i1069.CreateScheduleUseCase(
-        scheduleRepository: gh<_i509.ScheduleRepository>(),
       ),
       registerFor: {_prod},
     );

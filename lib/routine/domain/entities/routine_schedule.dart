@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 
 /// Representing single schedule of a routine
-class Schedule extends Equatable {
-  /// Creates new [Schedule]
+class RoutineSchedule extends Equatable {
+  /// Creates new [RoutineSchedule]
   const new({
     required this.id,
     required this.routineId,

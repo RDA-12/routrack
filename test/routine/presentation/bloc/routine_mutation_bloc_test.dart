@@ -9,7 +9,10 @@ import '../../../common/di_mock.dart';
 import '../../domain/entities/routine_mocks.dart';
 
 void main() {
-  final params = CreateRoutineParams(name: mockRoutine.name);
+  final params = CreateRoutineParams(
+    name: mockRoutine.name,
+    days: const {.mon, .thu},
+  );
   late CreateRoutineUseCase createRoutineUseCase;
 
   setUpAll(() {
