@@ -1,23 +1,35 @@
 import 'package:clock/clock.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:routrack/common/common.dart';
 
+import 'di_mock.dart';
+
 void main() {
+  final now = DateTime.now();
+  late Clock mockClock;
   late AppClock appClock;
 
+  setUpAll(initializeMockDependencies);
+
   setUp(() {
-    appClock = AppClock(clock);
+    mockClock = di<Clock>();
+    when(() => mockClock.now()).thenReturn(now);
+
+    appClock = AppClock(mockClock);
+  });
+
+  tearDown(() {
+    reset(mockClock);
   });
 
   group('AppClock', () {
     group('getCurrentDateTime', () {
-      test('returns correct UTC DateTime', () {
-        final now = DateTime.now();
-        withClock(Clock.fixed(now), () {
-          final result = appClock.getCurrentDateTime();
+      test('returns correct UTC DateTime from Clock', () {
+        final result = appClock.getCurrentDateTime();
 
-          expect(result, now.toUtc());
-        });
+        expect(result, now.toUtc());
+        verify(mockClock.now).called(1);
       });
     });
   });
