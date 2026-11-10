@@ -17,11 +17,13 @@ import 'package:routrack/common/app_clock.dart' as _i81;
 import 'package:routrack/common/database/database.dart' as _i889;
 import 'package:routrack/common/uid_generator.dart' as _i181;
 import 'package:routrack/routine/routine.dart' as _i617;
+import 'package:routrack/schedule/schedule.dart' as _i735;
 import 'package:uuid/uuid.dart' as _i706;
 
 import '../routine/data/repositories/routine_repository_mocks.dart' as _i212;
 import '../routine/domain/use_cases/routine_use_cases_mock.dart' as _i170;
 import '../routine/presentation/bloc/routine_bloc_mock.dart' as _i477;
+import '../schedule/data/repositories/schedule_repository_mocks.dart' as _i567;
 import 'app_clock_mock.dart' as _i788;
 import 'database/app_database_mock.dart' as _i879;
 import 'external_module_mock.dart' as _i888;
@@ -52,6 +54,10 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i617.RoutineRepository>(
       () => _i212.MockRoutineRepository(),
+      registerFor: {_test},
+    );
+    gh.lazySingleton<_i735.ScheduleRepository>(
+      () => _i567.MockScheduleRepository(),
       registerFor: {_test},
     );
     gh.lazySingleton<_i81.AppClock>(

@@ -26,6 +26,10 @@ import 'package:routrack/routine/domain/repositories/repositories.dart'
 import 'package:routrack/routine/domain/use_cases/create_routine.dart' as _i844;
 import 'package:routrack/routine/presentation/bloc/routine_mutation_bloc.dart'
     as _i142;
+import 'package:routrack/schedule/domain/repositories/repositories.dart'
+    as _i509;
+import 'package:routrack/schedule/domain/use_cases/create_schedule_use_case.dart'
+    as _i1069;
 import 'package:uuid/uuid.dart' as _i706;
 
 const String _prod = 'prod';
@@ -52,6 +56,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i81.AppClock>(
       () => _i81.AppClock(gh<_i454.Clock>()),
+      registerFor: {_prod},
+    );
+    gh.lazySingleton<_i1069.CreateScheduleUseCase>(
+      () => _i1069.CreateScheduleUseCase(
+        scheduleRepository: gh<_i509.ScheduleRepository>(),
+      ),
       registerFor: {_prod},
     );
     gh.lazySingleton<_i181.UidGenerator>(
