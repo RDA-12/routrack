@@ -105,9 +105,7 @@ class LoadingOverlay extends StatelessWidget {
               if (controller.state != .idle)
                 _PositionedOverlayWrapper(
                   overlay: switch (controller.state) {
-                    .loading => const Center(
-                      child: LoadingIndicator(),
-                    ),
+                    .loading => const LoadingIndicator(),
                     .result => LoadingOverlayResultWidget(
                       result: controller.result!,
                       onClosePressed: controller.close,
