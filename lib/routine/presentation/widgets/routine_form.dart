@@ -1,5 +1,7 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:routrack/common/common.dart';
 import 'package:routrack/routine/domain/domain.dart';
+import 'package:routrack/routine/presentation/widgets/weekday_selector.dart';
 
 /// Signature of callback when new routine created
 typedef OnRoutineSaved = void Function(CreateRoutineParams params);
@@ -21,10 +23,14 @@ class RoutineForm extends StatefulWidget {
 class _RoutineFormState extends State<RoutineForm> {
   final formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
+  final weekDayController = WeekDaySelectorController();
+  final ValueNotifier<Set<WeekDay>> daysNotifier = ValueNotifier(<WeekDay>{});
 
   @override
   void dispose() {
     nameController.dispose();
+    weekDayController.dispose();
+    daysNotifier.dispose();
     super.dispose();
   }
 
@@ -35,21 +41,34 @@ class _RoutineFormState extends State<RoutineForm> {
       child: Column(
         spacing: 16,
         children: [
-          TextFormField(
-            controller: nameController,
-            decoration: const InputDecoration(
-              labelText: 'Routine Name',
-              hintText: 'e.g. do 1 push up, drink at least 1.5 liters',
-              helperText: 'minimum 6 letters',
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                spacing: 8,
+                children: [
+                  TextFormField(
+                    controller: nameController,
+                    decoration: const InputDecoration(
+                      labelText: 'Routine Name',
+                      hintText: 'e.g. do 1 push up, drink at least 1.5 liters',
+                      helperText: 'minimum 6 letters',
+                    ),
+                    textInputAction: .done,
+                    maxLength: 32,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'routine name is required';
+                      }
+                      return null;
+                    },
+                  ),
+                  WeekDaySelector(
+                    controller: weekDayController,
+                    label: 'Repeating days',
+                  ),
+                ],
+              ),
             ),
-            textInputAction: .done,
-            maxLength: 32,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'routine name is required';
-              }
-              return null;
-            },
           ),
           FilledButton(
             onPressed: widget.onRoutineSaved == null
@@ -61,7 +80,7 @@ class _RoutineFormState extends State<RoutineForm> {
                     widget.onRoutineSaved!(
                       CreateRoutineParams(
                         name: name,
-                        days: const {},
+                        days: weekDayController.selected,
                       ),
                     );
                   },

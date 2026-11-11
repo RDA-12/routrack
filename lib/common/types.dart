@@ -1,23 +1,23 @@
 /// Weekday
-enum WeekDay(final String rrule) {
+enum WeekDay(final String rrule, final String name) {
   /// Monday
-  mon('MO'),
+  mon('MO', 'Monday'),
 
   /// Tuesday
-  tue('TU'),
+  tue('TU', 'Tuesday'),
 
   /// Wednesday
-  wed('WE'),
+  wed('WE', 'Wednesday'),
 
   /// Thursday
-  thu('TH'),
+  thu('TH', 'Thursday'),
 
   /// Friday
-  fri('FR'),
+  fri('FR', 'Friday'),
 
   /// Saturday
-  sat('SA'),
+  sat('SA', 'Saturday'),
 
   /// Sunday
-  sun('SU'),
+  sun('SU', 'Sunday'),
 }

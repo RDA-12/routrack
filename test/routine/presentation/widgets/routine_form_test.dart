@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:routrack/common/common.dart';
 import 'package:routrack/routine/routine.dart';
 
 import '../../../helper.dart';
@@ -22,6 +23,7 @@ void main() {
         of: find.text('Save'),
         matching: find.byType(FilledButton),
       );
+      await tester.ensureVisible(saveButtonFinder);
       await tester.tap(saveButtonFinder);
       await tester.pumpAndSettle();
     }
@@ -32,6 +34,20 @@ void main() {
         matching: find.byType(TextFormField),
       );
       await tester.enterText(nameFieldFinder, name);
+    }
+
+    Future<void> selectDays(
+      Set<WeekDay> days, {
+      required WidgetTester tester,
+    }) async {
+      for (final day in days) {
+        final finder = find.ancestor(
+          of: find.text(day.name),
+          matching: find.byType(CheckboxListTile),
+        );
+      await tester.ensureVisible(finder);
+        await tester.tap(finder);
+      }
     }
 
     group('Render', () {
@@ -87,6 +103,14 @@ void main() {
           );
         },
       );
+
+      testWidgets('shows WeekDaySelector', (tester) async {
+        await pumpWidget(tester);
+
+        final finder = find.byType(WeekDaySelector);
+
+        expect(finder, findsOneWidget);
+      });
     });
 
     group('Interactions', () {
@@ -102,11 +126,12 @@ void main() {
           );
 
           await enterName('name', tester: tester);
+          await selectDays({.mon, .fri}, tester: tester);
           await tapSaveButton(tester);
 
           expect(
             params,
-            const CreateRoutineParams(name: 'name', days: {}),
+            const CreateRoutineParams(name: 'name', days: {.mon, .fri}),
           );
         },
       );
