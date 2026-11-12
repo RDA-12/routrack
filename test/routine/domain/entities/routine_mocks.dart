@@ -10,3 +10,7 @@ final mockSchedule = RoutineSchedule(
   routineId: mockRoutine.id,
   recurrence: const ['RRULE:FREQ=DAILY;BYDAY=MO,TU'],
 );
+
+final List<Routine> mockRoutines = List.generate(5, (index) {
+  return Routine(id: '$index', name: 'routine-$index');
+});

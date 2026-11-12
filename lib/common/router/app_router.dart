@@ -9,7 +9,7 @@ part 'app_router.g.dart';
 abstract class AppRouter {
   /// Config for app router
   static final config = GoRouter(
-    initialLocation: '/routines/create',
+    initialLocation: '/routines',
     routes: $appRoutes,
   );
 }
