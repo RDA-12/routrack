@@ -53,20 +53,12 @@ extension GetItInjectableX on _i174.GetIt {
       () => externalModule.appClock,
       registerFor: {_prod},
     );
-    gh.lazySingleton<_i1065.WatchRoutines>(
-      () => _i1065.WatchRoutines(),
-      registerFor: {_prod},
-    );
     gh.lazySingleton<_i81.AppClock>(
       () => _i81.AppClock(gh<_i454.Clock>()),
       registerFor: {_prod},
     );
     gh.lazySingleton<_i181.UidGenerator>(
       () => _i181.UidGenerator(gh<_i706.Uuid>()),
-      registerFor: {_prod},
-    );
-    gh.factory<_i215.RoutinesBloc>(
-      () => _i215.RoutinesBloc(watchRoutines: gh<_i547.WatchRoutines>()),
       registerFor: {_prod},
     );
     gh.lazySingleton<_i547.RoutineRepository>(
@@ -81,6 +73,16 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i844.CreateRoutineUseCase(
         routineRepository: gh<_i541.RoutineRepository>(),
       ),
+      registerFor: {_prod},
+    );
+    gh.lazySingleton<_i1065.WatchRoutines>(
+      () => _i1065.WatchRoutines(
+        routineRepository: gh<_i547.RoutineRepository>(),
+      ),
+      registerFor: {_prod},
+    );
+    gh.factory<_i215.RoutinesBloc>(
+      () => _i215.RoutinesBloc(watchRoutines: gh<_i547.WatchRoutines>()),
       registerFor: {_prod},
     );
     gh.factory<_i142.RoutineMutationBloc>(

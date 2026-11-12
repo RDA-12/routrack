@@ -13,3 +13,9 @@ mixin SaveMixin<P, T> on Repository<T> {
   /// Save new [T] based on [params]
   Future<AppResult<T>> save(P params);
 }
+
+/// Adds [watch] to the [Repository] to watch for list of [T] changes
+mixin WatchMixin<T> on Repository<T> {
+  /// Watch for list of [T] data changes
+  Stream<AppResult<List<T>>> watch();
+}

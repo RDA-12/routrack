@@ -51,4 +51,10 @@ final class DriftRoutineRepository implements RoutineRepository {
       return AppResult.failed(UnexpectedException(exception: e));
     }
   }
+
+  @override
+  Stream<AppResult<List<Routine>>> watch() {
+    // TODO(RDA12): implement watch
+    throw UnimplementedError();
+  }
 }
