@@ -2,6 +2,21 @@ import 'package:flutter/widgets.dart';
 import 'package:routrack/common/common.dart';
 import 'package:routrack/core/core.dart';
 
+/// Adds default message content for user
+extension MessageX on AppException {
+  /// Returns user message for this [AppException]
+  String getUserMessage() {
+    switch (this) {
+      case UnexpectedException():
+        return 'There is unexpected failure happened. '
+            'We will take a look into that shortly. '
+            'Please, try again later';
+      case NotFoundException(:final entity):
+        return 'Data for $entity is not found';
+    }
+  }
+}
+
 /// Box to shows [exception]
 class AppExceptionBox extends StatelessWidget {
   /// Creates new [AppExceptionBox]
@@ -15,17 +30,7 @@ class AppExceptionBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO(RDA12): maybe move it to its own extension?
-    late final String message;
-    switch (exception) {
-      case UnexpectedException():
-        message =
-            'There is unexpected failure happened. '
-            'We will take a look into that shortly. '
-            'Please, try again later';
-      case _:
-        message = '';
-    }
+    final message = exception.getUserMessage();
     return Column(
       spacing: 8,
       mainAxisAlignment: .center,

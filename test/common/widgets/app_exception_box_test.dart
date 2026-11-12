@@ -18,6 +18,31 @@ void main() {
     );
   }
 
+  group('getUserMessage', () {
+    test('returns correct String for UnexpectedException', () {
+      final exception = UnexpectedException(exception: Exception());
+
+      expect(
+        exception.getUserMessage(),
+        'There is unexpected failure happened. '
+        'We will take a look into that shortly. '
+        'Please, try again later',
+      );
+    });
+    test('returns correct String for NotFoundException', () {
+      for (final entity in Entity.values) {
+        final expected = 'Data for $entity is not found';
+
+        final actual = NotFoundException(
+          entity: entity,
+          id: 'id',
+        ).getUserMessage();
+
+        expect(actual, expected);
+      }
+    });
+  });
+
   group('AppExceptionBox', () {
     group('Render', () {
       testWidgets('shows title when provided', (tester) async {

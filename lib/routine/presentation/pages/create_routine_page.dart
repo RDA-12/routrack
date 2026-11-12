@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:routrack/common/common.dart';
-import 'package:routrack/core/app_exception.dart';
 import 'package:routrack/routine/domain/entities/routine.dart';
 import 'package:routrack/routine/presentation/bloc/bloc.dart';
 import 'package:routrack/routine/presentation/widgets/widgets.dart';
@@ -49,7 +48,7 @@ class _CreateRoutinePageState extends State<CreateRoutinePage> {
                           :final operation,
                         ):
                           late final String title;
-                          late final String content;
+                          final content = exception.getUserMessage();
                           switch (operation) {
                             case OperationType.create:
                               title = 'Create routine failed';
@@ -57,18 +56,6 @@ class _CreateRoutinePageState extends State<CreateRoutinePage> {
                               title = 'Update routine failed';
                             case OperationType.delete:
                               title = 'Delete routine failed';
-                          }
-                          // TODO(RDA12): maybe move it to its own extension?
-                          // So its reusable
-                          switch (exception) {
-                            case UnexpectedException():
-                              content =
-                                  'There is unexpected failure happened. '
-                                  'We will take a look into that shortly. '
-                                  'Please, try again later';
-                            case _:
-                              // TODO(RDA12): Handle this case.
-                              throw UnimplementedError();
                           }
                           controller.transitionToResult(
                             LoadingOverlayResult(
