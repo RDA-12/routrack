@@ -11,12 +11,6 @@ class CreateRoutineRoute extends GoRouteData with $CreateRoutineRoute {
 }
 
 /// Route to go to [RoutinesListPage]
-@TypedGoRoute<RoutinesListRoute>(
-  path: '/routines',
-  routes: [
-    TypedGoRoute<CreateRoutineRoute>(path: 'create'),
-  ],
-)
 class RoutinesListRoute extends GoRouteData with $RoutinesListRoute {
   /// Creates new [RoutinesListRoute]
   const new();
@@ -24,4 +18,24 @@ class RoutinesListRoute extends GoRouteData with $RoutinesListRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const RoutinesListPage();
+}
+
+/// Route to go to [HomePage]
+@TypedGoRoute<HomeRoute>(
+  path: '/',
+  routes: [
+    TypedGoRoute<RoutinesListRoute>(
+      path: 'routines',
+      routes: [
+        TypedGoRoute<CreateRoutineRoute>(path: 'create'),
+      ],
+    ),
+  ],
+)
+class HomeRoute extends GoRouteData with $HomeRoute {
+  /// Creates new [HomeRoute]
+  const new();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) => const HomePage();
 }

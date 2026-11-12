@@ -16,9 +16,11 @@ import 'package:injectable/injectable.dart' as _i526;
 import 'package:routrack/common/app_clock.dart' as _i81;
 import 'package:routrack/common/database/database.dart' as _i889;
 import 'package:routrack/common/uid_generator.dart' as _i181;
+import 'package:routrack/home/home.dart' as _i350;
 import 'package:routrack/routine/routine.dart' as _i617;
 import 'package:uuid/uuid.dart' as _i706;
 
+import '../home/presentation/bloc/home_bloc_mocks.dart' as _i772;
 import '../routine/data/repositories/routine_repository_mocks.dart' as _i212;
 import '../routine/domain/use_cases/routine_use_cases_mock.dart' as _i170;
 import '../routine/presentation/bloc/routine_bloc_mock.dart' as _i477;
@@ -56,6 +58,10 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i617.RoutineRepository>(
       () => _i212.MockRoutineRepository(),
+      registerFor: {_test},
+    );
+    gh.lazySingleton<_i350.HomeBloc>(
+      () => _i772.MockHomeBloc(),
       registerFor: {_test},
     );
     gh.lazySingleton<_i617.RoutinesBloc>(
