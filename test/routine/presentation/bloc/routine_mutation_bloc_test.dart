@@ -83,6 +83,12 @@ void main() {
               data: Routine(
                 id: 'failed',
                 name: params.name,
+                activeSchedule: const RoutineSchedule(
+                  id: 'id',
+                  routineId: 'routineId',
+                  recurrence: [],
+                  status: .active,
+                ),
               ),
               operation: .create,
               exception: AppException.test(),

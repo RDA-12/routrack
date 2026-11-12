@@ -384,12 +384,22 @@ class $ScheduleTableTable extends ScheduleTable
         requiredDuringInsert: true,
       ).withConverter<List<String>>($ScheduleTableTable.$converterrecurrence);
   @override
+  late final GeneratedColumnWithTypeConverter<ScheduleStatus, String> status =
+      GeneratedColumn<String>(
+        'status',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<ScheduleStatus>($ScheduleTableTable.$converterstatus);
+  @override
   List<GeneratedColumn> get $columns => [
     id,
     createdAt,
     updatedAt,
     routineId,
     recurrence,
+    status,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -463,6 +473,12 @@ class $ScheduleTableTable extends ScheduleTable
           data['${effectivePrefix}recurrence'],
         )!,
       ),
+      status: $ScheduleTableTable.$converterstatus.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}status'],
+        )!,
+      ),
     );
   }
 
@@ -473,6 +489,8 @@ class $ScheduleTableTable extends ScheduleTable
 
   static JsonTypeConverter2<List<String>, String, Map<String, Object?>>
   $converterrecurrence = const StringListConverter();
+  static JsonTypeConverter2<ScheduleStatus, String, String> $converterstatus =
+      const EnumNameConverter<ScheduleStatus>(ScheduleStatus.values);
 }
 
 class ScheduleTableData extends DataClass
@@ -491,12 +509,16 @@ class ScheduleTableData extends DataClass
 
   /// List of RRULE of this schedule
   final List<String> recurrence;
+
+  /// Status of this routine
+  final ScheduleStatus status;
   const ScheduleTableData({
     required this.id,
     required this.createdAt,
     required this.updatedAt,
     required this.routineId,
     required this.recurrence,
+    required this.status,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -510,6 +532,11 @@ class ScheduleTableData extends DataClass
         $ScheduleTableTable.$converterrecurrence.toSql(recurrence),
       );
     }
+    {
+      map['status'] = Variable<String>(
+        $ScheduleTableTable.$converterstatus.toSql(status),
+      );
+    }
     return map;
   }
 
@@ -520,6 +547,7 @@ class ScheduleTableData extends DataClass
       updatedAt: Value(updatedAt),
       routineId: Value(routineId),
       recurrence: Value(recurrence),
+      status: Value(status),
     );
   }
 
@@ -536,6 +564,9 @@ class ScheduleTableData extends DataClass
       recurrence: $ScheduleTableTable.$converterrecurrence.fromJson(
         serializer.fromJson<Map<String, Object?>>(json['recurrence']),
       ),
+      status: $ScheduleTableTable.$converterstatus.fromJson(
+        serializer.fromJson<String>(json['status']),
+      ),
     );
   }
   @override
@@ -549,6 +580,9 @@ class ScheduleTableData extends DataClass
       'recurrence': serializer.toJson<Map<String, Object?>>(
         $ScheduleTableTable.$converterrecurrence.toJson(recurrence),
       ),
+      'status': serializer.toJson<String>(
+        $ScheduleTableTable.$converterstatus.toJson(status),
+      ),
     };
   }
 
@@ -558,12 +592,14 @@ class ScheduleTableData extends DataClass
     DateTime? updatedAt,
     String? routineId,
     List<String>? recurrence,
+    ScheduleStatus? status,
   }) => ScheduleTableData(
     id: id ?? this.id,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
     routineId: routineId ?? this.routineId,
     recurrence: recurrence ?? this.recurrence,
+    status: status ?? this.status,
   );
   ScheduleTableData copyWithCompanion(ScheduleTableCompanion data) {
     return ScheduleTableData(
@@ -574,6 +610,7 @@ class ScheduleTableData extends DataClass
       recurrence: data.recurrence.present
           ? data.recurrence.value
           : this.recurrence,
+      status: data.status.present ? data.status.value : this.status,
     );
   }
 
@@ -584,14 +621,15 @@ class ScheduleTableData extends DataClass
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('routineId: $routineId, ')
-          ..write('recurrence: $recurrence')
+          ..write('recurrence: $recurrence, ')
+          ..write('status: $status')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode =>
-      Object.hash(id, createdAt, updatedAt, routineId, recurrence);
+      Object.hash(id, createdAt, updatedAt, routineId, recurrence, status);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -600,7 +638,8 @@ class ScheduleTableData extends DataClass
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
           other.routineId == this.routineId &&
-          other.recurrence == this.recurrence);
+          other.recurrence == this.recurrence &&
+          other.status == this.status);
 }
 
 class ScheduleTableCompanion extends UpdateCompanion<ScheduleTableData> {
@@ -609,6 +648,7 @@ class ScheduleTableCompanion extends UpdateCompanion<ScheduleTableData> {
   final Value<DateTime> updatedAt;
   final Value<String> routineId;
   final Value<List<String>> recurrence;
+  final Value<ScheduleStatus> status;
   final Value<int> rowid;
   const ScheduleTableCompanion({
     this.id = const Value.absent(),
@@ -616,6 +656,7 @@ class ScheduleTableCompanion extends UpdateCompanion<ScheduleTableData> {
     this.updatedAt = const Value.absent(),
     this.routineId = const Value.absent(),
     this.recurrence = const Value.absent(),
+    this.status = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   ScheduleTableCompanion.insert({
@@ -624,18 +665,21 @@ class ScheduleTableCompanion extends UpdateCompanion<ScheduleTableData> {
     required DateTime updatedAt,
     required String routineId,
     required List<String> recurrence,
+    required ScheduleStatus status,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        createdAt = Value(createdAt),
        updatedAt = Value(updatedAt),
        routineId = Value(routineId),
-       recurrence = Value(recurrence);
+       recurrence = Value(recurrence),
+       status = Value(status);
   static Insertable<ScheduleTableData> custom({
     Expression<String>? id,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<String>? routineId,
     Expression<String>? recurrence,
+    Expression<String>? status,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -644,6 +688,7 @@ class ScheduleTableCompanion extends UpdateCompanion<ScheduleTableData> {
       if (updatedAt != null) 'updated_at': updatedAt,
       if (routineId != null) 'routine_id': routineId,
       if (recurrence != null) 'recurrence': recurrence,
+      if (status != null) 'status': status,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -654,6 +699,7 @@ class ScheduleTableCompanion extends UpdateCompanion<ScheduleTableData> {
     Value<DateTime>? updatedAt,
     Value<String>? routineId,
     Value<List<String>>? recurrence,
+    Value<ScheduleStatus>? status,
     Value<int>? rowid,
   }) {
     return ScheduleTableCompanion(
@@ -662,6 +708,7 @@ class ScheduleTableCompanion extends UpdateCompanion<ScheduleTableData> {
       updatedAt: updatedAt ?? this.updatedAt,
       routineId: routineId ?? this.routineId,
       recurrence: recurrence ?? this.recurrence,
+      status: status ?? this.status,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -686,6 +733,11 @@ class ScheduleTableCompanion extends UpdateCompanion<ScheduleTableData> {
         $ScheduleTableTable.$converterrecurrence.toSql(recurrence.value),
       );
     }
+    if (status.present) {
+      map['status'] = Variable<String>(
+        $ScheduleTableTable.$converterstatus.toSql(status.value),
+      );
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -700,6 +752,7 @@ class ScheduleTableCompanion extends UpdateCompanion<ScheduleTableData> {
           ..write('updatedAt: $updatedAt, ')
           ..write('routineId: $routineId, ')
           ..write('recurrence: $recurrence, ')
+          ..write('status: $status, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -1027,6 +1080,7 @@ typedef $$ScheduleTableTableCreateCompanionBuilder =
       required DateTime updatedAt,
       required String routineId,
       required List<String> recurrence,
+      required ScheduleStatus status,
       Value<int> rowid,
     });
 typedef $$ScheduleTableTableUpdateCompanionBuilder =
@@ -1036,6 +1090,7 @@ typedef $$ScheduleTableTableUpdateCompanionBuilder =
       Value<DateTime> updatedAt,
       Value<String> routineId,
       Value<List<String>> recurrence,
+      Value<ScheduleStatus> status,
       Value<int> rowid,
     });
 
@@ -1096,6 +1151,12 @@ class $$ScheduleTableTableFilterComposer
     builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
+  ColumnWithTypeConverterFilters<ScheduleStatus, ScheduleStatus, String>
+  get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
   $$RoutineTableTableFilterComposer get routineId {
     final $$RoutineTableTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -1149,6 +1210,11 @@ class $$ScheduleTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$RoutineTableTableOrderingComposer get routineId {
     final $$RoutineTableTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -1196,6 +1262,9 @@ class $$ScheduleTableTableAnnotationComposer
         column: $table.recurrence,
         builder: (column) => column,
       );
+
+  GeneratedColumnWithTypeConverter<ScheduleStatus, String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
 
   $$RoutineTableTableAnnotationComposer get routineId {
     final $$RoutineTableTableAnnotationComposer composer = $composerBuilder(
@@ -1254,6 +1323,7 @@ class $$ScheduleTableTableTableManager
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<String> routineId = const Value.absent(),
                 Value<List<String>> recurrence = const Value.absent(),
+                Value<ScheduleStatus> status = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => ScheduleTableCompanion(
                 id: id,
@@ -1261,6 +1331,7 @@ class $$ScheduleTableTableTableManager
                 updatedAt: updatedAt,
                 routineId: routineId,
                 recurrence: recurrence,
+                status: status,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -1270,6 +1341,7 @@ class $$ScheduleTableTableTableManager
                 required DateTime updatedAt,
                 required String routineId,
                 required List<String> recurrence,
+                required ScheduleStatus status,
                 Value<int> rowid = const Value.absent(),
               }) => ScheduleTableCompanion.insert(
                 id: id,
@@ -1277,6 +1349,7 @@ class $$ScheduleTableTableTableManager
                 updatedAt: updatedAt,
                 routineId: routineId,
                 recurrence: recurrence,
+                status: status,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

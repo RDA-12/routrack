@@ -18,10 +18,12 @@ extension CreateRoutineMapper on CreateRoutineDBParams {
   ScheduleTableCompanion toScheduleDatabase({
     required String id,
     required String routineId,
+    required ScheduleStatus status,
     required DateTime createdAt,
   }) => ScheduleTableCompanion.insert(
     id: id,
     routineId: routineId,
+    status: status,
     recurrence: recurrence,
     createdAt: createdAt,
     updatedAt: createdAt,
@@ -31,8 +33,12 @@ extension CreateRoutineMapper on CreateRoutineDBParams {
 /// Mapper to map [RoutineTableData] to [Routine]
 extension RoutineMapper on RoutineTableData {
   /// Return [Routine] object of this
-  Routine toDomain() {
-    return Routine(id: id, name: name);
+  Routine toDomain({required RoutineSchedule activeSchedule}) {
+    return Routine(
+      id: id,
+      name: name,
+      activeSchedule: activeSchedule,
+    );
   }
 }
 
@@ -44,6 +50,7 @@ extension ScheduleRoutineMapper on ScheduleTableData {
       id: id,
       routineId: routineId,
       recurrence: recurrence,
+      status: status,
     );
   }
 }

@@ -21,3 +21,12 @@ enum WeekDay(final String rrule, final String name) {
   /// Sunday
   sun('SU', 'Sunday'),
 }
+
+/// Schedule status
+enum ScheduleStatus {
+  /// Schedule is active
+  active,
+
+  /// Schedule is inactive
+  inactive,
+}

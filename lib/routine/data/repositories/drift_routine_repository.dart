@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mock_exceptions/mock_exceptions.dart';
 import 'package:routrack/common/common.dart';
@@ -39,6 +40,7 @@ final class DriftRoutineRepository implements RoutineRepository {
             .insertReturning(
               params.toScheduleDatabase(
                 id: _uidGenerator.generateUid(),
+                status: .active,
                 routineId: newRoutineDB.id,
                 createdAt: now,
               ),
@@ -46,7 +48,9 @@ final class DriftRoutineRepository implements RoutineRepository {
         return (newRoutineDB, schedule);
       });
       return AppResult.success(
-        newRoutineDB.toDomain(),
+        newRoutineDB.toDomain(
+          activeSchedule: schedule.toDomain(),
+        ),
       );
     } on Exception catch (e) {
       return AppResult.failed(UnexpectedException(exception: e));
@@ -56,25 +60,36 @@ final class DriftRoutineRepository implements RoutineRepository {
   @override
   Stream<AppResult<List<Routine>>> watch() {
     final routineQuery = _db.select(_db.routineTable);
-    return routineQuery
-        .watch()
-        .map((rows) {
-          maybeThrowException(this, Invocation.method(#watch, []));
-          final routines = <Routine>[];
-          for (final row in rows) {
-            routines.add(row.toDomain());
-          }
-          return AppResult.success(routines);
-        })
-        .onErrorReturnWith((exception, st) {
-          if (exception is Exception) {
-            return AppResult.failed(
-              UnexpectedException(exception: exception),
-            );
-          }
-          return AppResult.failed(
-            UnexpectedException(exception: Exception('$exception')),
+    final routineStream = routineQuery.watch();
+    final scheduleQuery = _db.select(_db.scheduleTable)
+      ..where((tbl) => tbl.status.equals(ScheduleStatus.active.name));
+    final scheduleStream = scheduleQuery.watch();
+    return CombineLatestStream.combine2(
+      routineStream,
+      scheduleStream,
+      (routines, schedules) {
+        maybeThrowException(this, Invocation.method(#watch, []));
+        final effectiveRoutines = <Routine>[];
+        for (final routine in routines) {
+          final schedule = schedules.firstWhereOrNull(
+            (it) => it.routineId == routine.id,
           );
-        });
+          if (schedule == null) continue;
+          effectiveRoutines.add(
+            routine.toDomain(activeSchedule: schedule.toDomain()),
+          );
+        }
+        return AppResult.success(effectiveRoutines);
+      },
+    ).onErrorReturnWith((exception, st) {
+      if (exception is Exception) {
+        return AppResult.failed(
+          UnexpectedException(exception: exception),
+        );
+      }
+      return AppResult.failed(
+        UnexpectedException(exception: Exception('$exception')),
+      );
+    });
   }
 }

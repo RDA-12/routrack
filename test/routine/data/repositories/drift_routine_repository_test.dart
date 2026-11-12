@@ -57,6 +57,12 @@ void main() {
           Routine(
             id: uid,
             name: params.name,
+            activeSchedule: const RoutineSchedule(
+              id: uid,
+              routineId: uid,
+              recurrence: ['RRULE:FREQ=DAILY;BYDAY=MO,TU'],
+              status: .active,
+            ),
           ),
         );
 
@@ -76,6 +82,7 @@ void main() {
         expect(scheduleRow, isNotNull);
         expect(scheduleRow!.routineId, row.id);
         expect(scheduleRow.recurrence, params.recurrence);
+        expect(scheduleRow.status, ScheduleStatus.active);
         expect(scheduleRow.createdAt, now);
         expect(scheduleRow.updatedAt, now);
       });
@@ -101,7 +108,18 @@ void main() {
         expect(
           stream,
           emitsInOrder([
-            AppResult.success([Routine(id: uid, name: params.name)]),
+            AppResult.success([
+              Routine(
+                id: uid,
+                name: params.name,
+                activeSchedule: const RoutineSchedule(
+                  id: uid,
+                  routineId: uid,
+                  recurrence: ['RRULE:FREQ=DAILY;BYDAY=MO,TU'],
+                  status: .active,
+                ),
+              ),
+            ]),
           ]),
         );
       });
