@@ -4,6 +4,7 @@ import 'package:routrack/common/common.dart';
 import 'package:routrack/core/core.dart';
 import 'package:routrack/routine/data/mapper/routine_mapper.dart';
 import 'package:routrack/routine/domain/domain.dart';
+import 'package:rxdart/rxdart.dart';
 
 /// Drift implementation of [RoutineRepository]
 @LazySingleton(env: [Environment.prod], as: RoutineRepository)
@@ -45,7 +46,7 @@ final class DriftRoutineRepository implements RoutineRepository {
         return (newRoutineDB, schedule);
       });
       return AppResult.success(
-        newRoutineDB.toDomain(schedules: [schedule.toDomain()]),
+        newRoutineDB.toDomain(),
       );
     } on Exception catch (e) {
       return AppResult.failed(UnexpectedException(exception: e));
@@ -54,7 +55,26 @@ final class DriftRoutineRepository implements RoutineRepository {
 
   @override
   Stream<AppResult<List<Routine>>> watch() {
-    // TODO(RDA12): implement watch
-    throw UnimplementedError();
+    final routineQuery = _db.select(_db.routineTable);
+    return routineQuery
+        .watch()
+        .map((rows) {
+          maybeThrowException(this, Invocation.method(#watch, []));
+          final routines = <Routine>[];
+          for (final row in rows) {
+            routines.add(row.toDomain());
+          }
+          return AppResult.success(routines);
+        })
+        .onErrorReturnWith((exception, st) {
+          if (exception is Exception) {
+            return AppResult.failed(
+              UnexpectedException(exception: exception),
+            );
+          }
+          return AppResult.failed(
+            UnexpectedException(exception: Exception('$exception')),
+          );
+        });
   }
 }

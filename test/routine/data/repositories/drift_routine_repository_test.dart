@@ -91,5 +91,41 @@ void main() {
         result.expectFailedWith(UnexpectedException(exception: exception));
       });
     });
+
+    group('watch', () {
+      test('emits correct routines when stream emits normally', () async {
+        await repository.save(params);
+
+        final stream = repository.watch();
+
+        expect(
+          stream,
+          emitsInOrder([
+            AppResult.success([Routine(id: uid, name: params.name)]),
+          ]),
+        );
+      });
+
+      test(
+        'emits correct failed when stream emits unexpected exception',
+        () async {
+          final exception = Exception();
+          whenCalling(Invocation.method(#watch, []))
+              .on(repository)
+              .thenThrow(exception);
+
+          final stream = repository.watch();
+
+          expect(
+            stream,
+            emitsInOrder([
+              AppResult<List<Routine>>.failed(
+                UnexpectedException(exception: exception),
+              ),
+            ]),
+          );
+        },
+      );
+    });
   });
 }
