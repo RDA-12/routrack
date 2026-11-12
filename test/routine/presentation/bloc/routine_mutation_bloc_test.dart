@@ -60,8 +60,8 @@ void main() {
         build: buildBloc,
         act: (bloc) =>
             bloc.add(RoutineMutationCreationRequested(params: params)),
-        expect: () => const <RoutineMutationState>[
-          RoutineMutationState(isCreating: true),
+        expect: () => <RoutineMutationState>[
+          const RoutineMutationState(isCreating: true),
           RoutineMutationState(notice: CreatedNoticeUI(data: mockRoutine)),
         ],
       );
@@ -83,10 +83,10 @@ void main() {
               data: Routine(
                 id: 'failed',
                 name: params.name,
-                activeSchedule: const RoutineSchedule(
+                activeSchedule: RoutineSchedule(
                   id: 'id',
                   routineId: 'routineId',
-                  recurrence: [],
+                  recurrence: const [],
                   status: .active,
                 ),
               ),

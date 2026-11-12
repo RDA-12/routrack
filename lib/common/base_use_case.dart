@@ -13,8 +13,10 @@ abstract interface class FutureUseCase<P, R> {
 
 /// Use case contract for Stream operations
 ///
+/// [P] is param type for the call method
+///
 /// [R] is data type streamed by the use case. It wrapped with [AppResult].
-abstract interface class StreamUseCase<R> {
+abstract interface class StreamUseCase<P, R> {
   /// Returns stream data of [R]
-  Stream<AppResult<R>> call();
+  Stream<AppResult<R>> call([P params]);
 }

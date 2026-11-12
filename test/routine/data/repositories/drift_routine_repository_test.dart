@@ -57,10 +57,10 @@ void main() {
           Routine(
             id: uid,
             name: params.name,
-            activeSchedule: const RoutineSchedule(
+            activeSchedule: RoutineSchedule(
               id: uid,
               routineId: uid,
-              recurrence: ['RRULE:FREQ=DAILY;BYDAY=MO,TU'],
+              recurrence: const ['RRULE:FREQ=DAILY;BYDAY=MO,TU'],
               status: .active,
             ),
           ),
@@ -112,10 +112,10 @@ void main() {
               Routine(
                 id: uid,
                 name: params.name,
-                activeSchedule: const RoutineSchedule(
+                activeSchedule: RoutineSchedule(
                   id: uid,
                   routineId: uid,
-                  recurrence: ['RRULE:FREQ=DAILY;BYDAY=MO,TU'],
+                  recurrence: const ['RRULE:FREQ=DAILY;BYDAY=MO,TU'],
                   status: .active,
                 ),
               ),

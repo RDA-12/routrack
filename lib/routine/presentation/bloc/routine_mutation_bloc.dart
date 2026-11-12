@@ -41,10 +41,10 @@ class RoutineMutationBloc
               data: Routine(
                 id: 'failed',
                 name: event.params.name,
-                activeSchedule: const RoutineSchedule(
+                activeSchedule: RoutineSchedule(
                   id: 'id',
                   routineId: 'routineId',
-                  recurrence: [],
+                  recurrence: const [],
                   status: .active,
                 ),
               ),

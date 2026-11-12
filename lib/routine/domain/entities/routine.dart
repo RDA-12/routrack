@@ -19,6 +19,11 @@ class Routine extends Equatable {
   /// Current active schedule of this routine
   final RoutineSchedule activeSchedule;
 
+  /// Whether this Routine needs to be done in [date]
+  bool includes(DateTime date) {
+    return activeSchedule.includes(date);
+  }
+
   @override
   List<Object?> get props => [id, name, activeSchedule];
 }

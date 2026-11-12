@@ -17,7 +17,7 @@ void main() {
     routineRepository = di<RoutineRepository>();
     when(
       () => routineRepository.watch(),
-    ).thenAnswer((_) => Stream.value(AppResult.success(const [mockRoutine])));
+    ).thenAnswer((_) => Stream.value(AppResult.success([mockRoutine])));
 
     watchRoutines = WatchRoutines(routineRepository: routineRepository);
   });
@@ -41,7 +41,7 @@ void main() {
       expect(
         stream,
         emitsInOrder([
-          AppResult.success(const [mockRoutine]),
+          AppResult.success([mockRoutine]),
         ]),
       );
     });
@@ -57,6 +57,34 @@ void main() {
         stream,
         emitsInOrder([
           AppResult<List<Routine>>.failed(AppException.test()),
+        ]),
+      );
+    });
+
+    test('emits stream of success filtered by date', () {
+      final schedule = RoutineSchedule(
+        id: 'id',
+        routineId: 'routineId',
+        recurrence: const ['RRULE:FREQ=DAILY;BYDAY=FR'],
+        status: .active,
+      );
+      final expected = Routine(
+        id: 'id',
+        name: 'name',
+        activeSchedule: schedule,
+      );
+      when(() => routineRepository.watch()).thenAnswer(
+        (_) => Stream.value(AppResult.success([expected, ...mockRoutines])),
+      );
+
+      final date = DateTime(2026, 11, 13);
+
+      final stream = watchRoutines(WatchRoutinesParams(date: date));
+
+      expect(
+        stream,
+        emitsInOrder([
+          AppResult.success([expected]),
         ]),
       );
     });

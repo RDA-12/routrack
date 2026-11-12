@@ -1,13 +1,13 @@
 import 'package:routrack/routine/routine.dart';
 
-const mockRoutine = Routine(
+final mockRoutine = Routine(
   id: 'routine-id',
   name: 'routine-name',
   activeSchedule: RoutineSchedule(
     id: 'schedule-id',
     routineId: 'routine-id',
     status: .active,
-    recurrence: ['RRULE:FREQ=DAILY;BYDAY=MO,TU'],
+    recurrence: const ['RRULE:FREQ=DAILY;BYDAY=MO,TU'],
   ),
 );
 

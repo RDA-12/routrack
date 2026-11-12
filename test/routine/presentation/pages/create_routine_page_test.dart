@@ -111,7 +111,7 @@ void main() {
           controller.add(const RoutineMutationState(isCreating: true));
           await tester.pump();
           controller.add(
-            const RoutineMutationState(
+            RoutineMutationState(
               notice: CreatedNoticeUI(data: mockRoutine),
             ),
           );

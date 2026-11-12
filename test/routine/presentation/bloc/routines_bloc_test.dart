@@ -16,7 +16,7 @@ void main() {
   setUp(() {
     watchRoutines = di<WatchRoutines>();
     when(() => watchRoutines()).thenAnswer(
-      (_) => Stream.value(AppResult.success(const [mockRoutine])),
+      (_) => Stream.value(AppResult.success([mockRoutine])),
     );
   });
 
@@ -50,8 +50,8 @@ void main() {
         'when RoutinesSubscriptionRequested is added and success.',
         build: buildBloc,
         act: (bloc) => bloc.add(const RoutinesSubscriptionRequested()),
-        expect: () => const <RoutinesState>[
-          RoutinesLoadingData(),
+        expect: () => <RoutinesState>[
+          const RoutinesLoadingData(),
           RoutinesLoadSuccess(routines: [mockRoutine]),
         ],
       );
