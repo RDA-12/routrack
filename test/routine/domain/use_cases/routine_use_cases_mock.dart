@@ -4,3 +4,6 @@ import 'package:routrack/routine/routine.dart';
 
 @LazySingleton(env: [Environment.test], as: CreateRoutineUseCase)
 class MockCreateRoutineUseCase extends Mock implements CreateRoutineUseCase;
+
+@LazySingleton(env: [Environment.test], as: WatchRoutines)
+class MockWatchRoutines extends Mock implements WatchRoutines;

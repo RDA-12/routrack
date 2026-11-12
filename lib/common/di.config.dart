@@ -24,8 +24,11 @@ import 'package:routrack/routine/domain/domain.dart' as _i547;
 import 'package:routrack/routine/domain/repositories/repositories.dart'
     as _i541;
 import 'package:routrack/routine/domain/use_cases/create_routine.dart' as _i844;
+import 'package:routrack/routine/domain/use_cases/watch_routines.dart'
+    as _i1065;
 import 'package:routrack/routine/presentation/bloc/routine_mutation_bloc.dart'
     as _i142;
+import 'package:routrack/routine/presentation/bloc/routines_bloc.dart' as _i215;
 import 'package:uuid/uuid.dart' as _i706;
 
 const String _prod = 'prod';
@@ -50,12 +53,20 @@ extension GetItInjectableX on _i174.GetIt {
       () => externalModule.appClock,
       registerFor: {_prod},
     );
+    gh.lazySingleton<_i1065.WatchRoutines>(
+      () => _i1065.WatchRoutines(),
+      registerFor: {_prod},
+    );
     gh.lazySingleton<_i81.AppClock>(
       () => _i81.AppClock(gh<_i454.Clock>()),
       registerFor: {_prod},
     );
     gh.lazySingleton<_i181.UidGenerator>(
       () => _i181.UidGenerator(gh<_i706.Uuid>()),
+      registerFor: {_prod},
+    );
+    gh.factory<_i215.RoutinesBloc>(
+      () => _i215.RoutinesBloc(watchRoutines: gh<_i547.WatchRoutines>()),
       registerFor: {_prod},
     );
     gh.lazySingleton<_i547.RoutineRepository>(

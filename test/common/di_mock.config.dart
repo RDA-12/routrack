@@ -46,12 +46,20 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i477.MockRoutineMutationBloc(),
       registerFor: {_test},
     );
+    gh.lazySingleton<_i617.WatchRoutines>(
+      () => _i170.MockWatchRoutines(),
+      registerFor: {_test},
+    );
     gh.lazySingleton<_i181.UidGenerator>(
       () => _i247.MockUidGenerator(),
       registerFor: {_test},
     );
     gh.lazySingleton<_i617.RoutineRepository>(
       () => _i212.MockRoutineRepository(),
+      registerFor: {_test},
+    );
+    gh.lazySingleton<_i617.RoutinesBloc>(
+      () => _i477.MockRoutinesBloc(),
       registerFor: {_test},
     );
     gh.lazySingleton<_i81.AppClock>(
