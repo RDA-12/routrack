@@ -5,6 +5,7 @@ export 'database/database.dart';
 export 'di.dart';
 export 'repository_mixin.dart';
 export 'router/router.dart';
+export 'shell/shell.dart';
 export 'theme/theme.dart';
 export 'types.dart';
 export 'uid_generator.dart';

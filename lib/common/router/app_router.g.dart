@@ -6,15 +6,18 @@ part of 'app_router.dart';
 // GoRouterGenerator
 // **************************************************************************
 
-List<RouteBase> get $appRoutes => [$homeRoute];
+List<RouteBase> get $appRoutes => [$homeShellRoute];
 
-RouteBase get $homeRoute => GoRouteData.$route(
-  path: '/',
-  hasOverriddenOnExit: false,
-  factory: $HomeRoute._fromState,
+RouteBase get $homeShellRoute => ShellRouteData.$route(
+  factory: $HomeShellRouteExtension._fromState,
   routes: [
     GoRouteData.$route(
-      path: 'routines',
+      path: '/',
+      hasOverriddenOnExit: false,
+      factory: $HomeRoute._fromState,
+    ),
+    GoRouteData.$route(
+      path: '/routines',
       hasOverriddenOnExit: false,
       factory: $RoutinesListRoute._fromState,
       routes: [
@@ -27,6 +30,11 @@ RouteBase get $homeRoute => GoRouteData.$route(
     ),
   ],
 );
+
+extension $HomeShellRouteExtension on HomeShellRoute {
+  static HomeShellRoute _fromState(GoRouterState state) =>
+      const HomeShellRoute();
+}
 
 mixin $HomeRoute on GoRouteData {
   static HomeRoute _fromState(GoRouterState state) => const HomeRoute();

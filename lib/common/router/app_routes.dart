@@ -21,21 +21,53 @@ class RoutinesListRoute extends GoRouteData with $RoutinesListRoute {
 }
 
 /// Route to go to [HomePage]
-@TypedGoRoute<HomeRoute>(
-  path: '/',
-  routes: [
-    TypedGoRoute<RoutinesListRoute>(
-      path: 'routines',
-      routes: [
-        TypedGoRoute<CreateRoutineRoute>(path: 'create'),
-      ],
-    ),
-  ],
-)
 class HomeRoute extends GoRouteData with $HomeRoute {
   /// Creates new [HomeRoute]
   const new();
 
   @override
   Widget build(BuildContext context, GoRouterState state) => const HomePage();
+}
+
+/// Home [ShellRoute]
+@TypedShellRoute<HomeShellRoute>(
+  routes: [
+    TypedGoRoute<HomeRoute>(path: '/'),
+    TypedGoRoute<RoutinesListRoute>(
+      path: '/routines',
+      routes: [
+        TypedGoRoute<CreateRoutineRoute>(path: 'create'),
+      ],
+    ),
+  ],
+)
+class HomeShellRoute extends ShellRouteData {
+  /// Creates new [HomeShellRoute]
+  const new();
+
+  int _indexOf(String location) {
+    if (location.startsWith('/routines')) return 1;
+    return 0;
+  }
+
+  String _locationOf(int index) {
+    if (index == 1) return '/routines';
+    return '/';
+  }
+
+  @override
+  Widget builder(
+    BuildContext context,
+    GoRouterState state,
+    Widget navigator,
+  ) {
+    return HomeShell(
+      selectedIndex: _indexOf(state.matchedLocation),
+      onDestinationSelected: (index) {
+        final location = _locationOf(index);
+        context.go(location);
+      },
+      child: navigator,
+    );
+  }
 }
