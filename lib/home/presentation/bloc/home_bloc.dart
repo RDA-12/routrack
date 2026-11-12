@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
+import 'package:injectable/injectable.dart';
 import 'package:routrack/common/common.dart';
 import 'package:routrack/core/core.dart';
 import 'package:routrack/routine/routine.dart';
@@ -9,6 +10,7 @@ part 'home_event.dart';
 part 'home_state.dart';
 
 /// Bloc to read data needed by Home page
+@Injectable(env: [Environment.prod])
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   /// Creates new [HomeBloc]
   new({

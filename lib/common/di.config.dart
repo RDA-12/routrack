@@ -18,6 +18,7 @@ import 'package:routrack/common/common.dart' as _i336;
 import 'package:routrack/common/database/app_database.dart' as _i430;
 import 'package:routrack/common/external_module.dart' as _i735;
 import 'package:routrack/common/uid_generator.dart' as _i181;
+import 'package:routrack/home/presentation/bloc/home_bloc.dart' as _i797;
 import 'package:routrack/routine/data/repositories/drift_routine_repository.dart'
     as _i85;
 import 'package:routrack/routine/domain/domain.dart' as _i547;
@@ -29,6 +30,7 @@ import 'package:routrack/routine/domain/use_cases/watch_routines.dart'
 import 'package:routrack/routine/presentation/bloc/routine_mutation_bloc.dart'
     as _i142;
 import 'package:routrack/routine/presentation/bloc/routines_bloc.dart' as _i215;
+import 'package:routrack/routine/routine.dart' as _i617;
 import 'package:uuid/uuid.dart' as _i706;
 
 const String _prod = 'prod';
@@ -83,6 +85,13 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i215.RoutinesBloc>(
       () => _i215.RoutinesBloc(watchRoutines: gh<_i547.WatchRoutines>()),
+      registerFor: {_prod},
+    );
+    gh.factory<_i797.HomeBloc>(
+      () => _i797.HomeBloc(
+        watchRoutines: gh<_i617.WatchRoutines>(),
+        clock: gh<_i336.AppClock>(),
+      ),
       registerFor: {_prod},
     );
     gh.factory<_i142.RoutineMutationBloc>(
