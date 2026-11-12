@@ -83,7 +83,6 @@ void main() {
               data: Routine(
                 id: 'failed',
                 name: params.name,
-                schedules: const [],
               ),
               operation: .create,
               exception: AppException.test(),

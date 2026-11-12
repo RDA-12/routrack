@@ -57,13 +57,6 @@ void main() {
           Routine(
             id: uid,
             name: params.name,
-            schedules: [
-              RoutineSchedule(
-                id: uid,
-                routineId: uid,
-                recurrence: params.recurrence,
-              ),
-            ],
           ),
         );
 
