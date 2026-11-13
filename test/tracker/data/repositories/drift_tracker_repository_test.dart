@@ -96,5 +96,54 @@ void main() {
         result.expectFailedWith(UnexpectedException(exception: exception));
       });
     });
+
+    group('WatchLatestPerRoutine', () {
+      final expectedDate = DateTime(2026, 11, 10);
+
+      setUp(() async {
+        for (var i = 0; i < 5; i++) {
+          await database
+              .into(database.trackerTable)
+              .insert(
+                TrackerTableCompanion.insert(
+                  id: '$i',
+                  createdAt: expectedDate,
+                  updatedAt: expectedDate,
+                  routineId: mockRoutine.id,
+                  date: expectedDate.add(Duration(days: -i)),
+                ),
+              );
+        }
+      });
+
+      test('returns success with correct trackers', () async {
+        final stream = repository.watchLatestPerRoutine();
+
+        expect(
+          stream,
+          emitsInOrder([
+            AppResult.success([
+              Tracker(id: '0', routineId: mockRoutine.id, date: expectedDate),
+            ]),
+          ]),
+        );
+      });
+
+      test('returns failed with correct exception '
+          'when unexpected exception occurred', () async {
+        final e = Exception();
+        whenCalling(Invocation.method(#watchLatestPerRoutine, []))
+            .on(repository)
+            .thenThrow(e);
+        final stream = repository.watchLatestPerRoutine();
+
+        expect(
+          stream,
+          emitsInOrder([
+            AppResult<List<Tracker>>.failed(UnexpectedException(exception: e)),
+          ]),
+        );
+      });
+    });
   });
 }
