@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:routrack/common/common.dart';
 import 'package:routrack/core/app_exception.dart';
@@ -35,6 +36,18 @@ void main() {
         GoRoute(
           path: '/',
           builder: (_, _) => const RoutinesListPage(),
+        ),
+        GoRoute(
+          path: '/routines',
+          builder: (_, _) => const Placeholder(),
+          routes: [
+            GoRoute(
+              path: 'create',
+              builder: (_, _) => const Placeholder(
+                key: ValueKey('create-routine'),
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -115,6 +128,30 @@ void main() {
           expect(finder, findsOneWidget);
           expect(widget.title, 'Failed to load routines');
           expect(widget.exception, AppException.test());
+        },
+      );
+    });
+
+    group('Interactions', () {
+      testWidgets(
+        'go to CreateRoutinePage when create routine button is pressed',
+        (tester) async {
+          whenListen(
+            routinesBloc,
+            Stream.value(const RoutinesLoadSuccess(routines: [])),
+            initialState: const RoutinesLoadSuccess(routines: []),
+          );
+          await pumpWidget(tester);
+
+          final buttonFinder = find.ancestor(
+            of: find.text('Create now'),
+            matching: find.byType(FilledButton),
+          );
+
+          await tester.tap(buttonFinder);
+          await tester.pumpAndSettle();
+
+          expect(find.byKey(const ValueKey('create-routine')), findsOneWidget);
         },
       );
     });

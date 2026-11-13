@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:routrack/common/common.dart';
@@ -30,7 +32,14 @@ class RoutinesListPage extends StatelessWidget {
                         child: LoadingIndicator(),
                       );
                     case RoutinesLoadSuccess(:final routines):
-                      return RoutinesList(routines: routines);
+                      return RoutinesList(
+                        routines: routines,
+                        onCreatePressed: () {
+                          unawaited(
+                            const CreateRoutineRoute().push<void>(context),
+                          );
+                        },
+                      );
                     case RoutinesLoadFailed(:final exception):
                       return Center(
                         child: AppExceptionBox(
