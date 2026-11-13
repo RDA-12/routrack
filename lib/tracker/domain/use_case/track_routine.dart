@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 import 'package:routrack/common/common.dart';
-import 'package:routrack/core/app_result.dart';
+import 'package:routrack/core/core.dart';
 import 'package:routrack/routine/routine.dart';
 import 'package:routrack/tracker/domain/entities/entities.dart';
 import 'package:routrack/tracker/domain/repositories/repositories.dart';
@@ -38,8 +38,19 @@ class TrackRoutineUseCase
   @override
   Future<AppResult<Tracker>> call(TrackRoutineParams params) async {
     final routineResult = await _getRoutineByIdUseCase(params.routineId);
-    if (routineResult is AppResultFailed<Routine>) {
-      return AppResult.failed(routineResult.exception);
+    switch (routineResult) {
+      case AppResultFailed<Routine>(:final exception):
+        return AppResult.failed(exception);
+      case AppResultSuccess<Routine>(:final data):
+        if (!data.includes(params.date)) {
+          return AppResult.failed(
+            UnexpectedException(
+              exception: Exception(
+                '${params.date} not in ${data.name} routine schedule',
+              ),
+            ),
+          );
+        }
     }
     return await _trackerRepository.save(params);
   }

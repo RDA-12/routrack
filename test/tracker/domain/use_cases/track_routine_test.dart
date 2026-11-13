@@ -11,9 +11,10 @@ import '../../../routine/domain/entities/routine_mocks.dart';
 import '../entities/tracker_mock.dart';
 
 void main() {
+  final date = DateTime(2026, 11, 10);
   final params = TrackRoutineParams(
     routineId: mockRoutine.id,
-    date: DateTime.now(),
+    date: date,
   );
   late TrackerRepository trackerRepository;
   late GetRoutineByIdUseCase getRoutineByIdUseCase;
@@ -80,6 +81,26 @@ void main() {
       final result = await trackRoutineUseCase(params);
 
       result.expectFailedWith(AppException.test());
+    });
+
+    test('returns failed with UnexcpectedException '
+        'when provided date is not in routine schedule', () async {
+      final routine = Routine(
+        id: 'id',
+        name: 'name',
+        activeSchedule: RoutineSchedule(
+          id: 'id',
+          routineId: 'routineId',
+          recurrence: const ['RRULE:FREQ=DAILY;BYDAY=SU'],
+          status: .active,
+        ),
+      );
+      when(() => getRoutineByIdUseCase(params.routineId))
+          .thenAnswer((_) async => AppResult.success(routine));
+
+      final result = await trackRoutineUseCase(params);
+
+      result.expectFailedWithType<UnexpectedException>();
     });
   });
 }

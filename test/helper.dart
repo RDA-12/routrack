@@ -16,6 +16,19 @@ extension ThrowExpectation<T> on AppResult<T> {
       ),
     );
   }
+
+  /// run [expect] to verify this [AppResult] is a [AppResultFailed] with
+  /// exception of type [E]
+  void expectFailedWithType<E>() {
+    expect(
+      this,
+      isA<AppResultFailed<T>>().having(
+        (r) => r.exception,
+        'exception',
+        isA<E>(),
+      ),
+    );
+  }
 }
 
 extension PumpExtension on WidgetTester {
