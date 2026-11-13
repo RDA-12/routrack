@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mock_exceptions/mock_exceptions.dart';
@@ -60,38 +59,36 @@ final class DriftRoutineRepository implements RoutineRepository {
 
   @override
   Stream<AppResult<List<Routine>>> watch() {
-    final routineQuery = _db.select(_db.routineTable);
-    final routineStream = routineQuery.watch();
-    final scheduleQuery = _db.select(_db.scheduleTable)
-      ..where((tbl) => tbl.status.equals(ScheduleStatus.active.name));
-    final scheduleStream = scheduleQuery.watch();
-    return CombineLatestStream.combine2(
-      routineStream,
-      scheduleStream,
-      (routines, schedules) {
-        maybeThrowException(this, Invocation.method(#watch, []));
-        final effectiveRoutines = <Routine>[];
-        for (final routine in routines) {
-          final schedule = schedules.firstWhereOrNull(
-            (it) => it.routineId == routine.id,
+    final query = _db.select(_db.routineTable).join([
+      leftOuterJoin(
+        _db.scheduleTable,
+        _db.scheduleTable.routineId.equalsExp(_db.routineTable.id),
+      ),
+    ])..where(_db.scheduleTable.status.equalsValue(ScheduleStatus.active));
+    return query
+        .watch()
+        .map((rows) {
+          maybeThrowException(this, Invocation.method(#watch, []));
+          final routines = <Routine>[];
+          for (final row in rows) {
+            final routineDB = row.readTable(_db.routineTable);
+            final scheduleDB = row.readTable(_db.scheduleTable);
+            routines.add(
+              routineDB.toDomain(activeSchedule: scheduleDB.toDomain()),
+            );
+          }
+          return AppResult.success(routines);
+        })
+        .onErrorReturnWith((exception, st) {
+          if (exception is Exception) {
+            return AppResult.failed(
+              UnexpectedException(exception: exception),
+            );
+          }
+          return AppResult.failed(
+            UnexpectedException(exception: Exception('$exception')),
           );
-          if (schedule == null) continue;
-          effectiveRoutines.add(
-            routine.toDomain(activeSchedule: schedule.toDomain()),
-          );
-        }
-        return AppResult.success(effectiveRoutines);
-      },
-    ).onErrorReturnWith((exception, st) {
-      if (exception is Exception) {
-        return AppResult.failed(
-          UnexpectedException(exception: exception),
-        );
-      }
-      return AppResult.failed(
-        UnexpectedException(exception: Exception('$exception')),
-      );
-    });
+        });
   }
 
   @override
