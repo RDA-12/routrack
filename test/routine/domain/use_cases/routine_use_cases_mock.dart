@@ -7,3 +7,6 @@ class MockCreateRoutineUseCase extends Mock implements CreateRoutineUseCase;
 
 @LazySingleton(env: [Environment.test], as: WatchRoutines)
 class MockWatchRoutines extends Mock implements WatchRoutines;
+
+@LazySingleton(env: [Environment.test], as: GetRoutineByIdUseCase)
+class MockGetRoutineByIdUseCase extends Mock implements GetRoutineByIdUseCase;

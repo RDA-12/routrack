@@ -92,4 +92,10 @@ final class DriftRoutineRepository implements RoutineRepository {
       );
     });
   }
+
+  @override
+  Future<AppResult<Routine>> getById(String id) async {
+    // TODO(RDA12): implement getById
+    throw UnimplementedError();
+  }
 }

@@ -19,4 +19,7 @@ final class CreateRoutineDBParams extends Equatable {
 
 /// Repository to manage [Routine] data
 abstract interface class RoutineRepository extends Repository<Routine>
-    with SaveMixin<CreateRoutineDBParams, Routine>, WatchMixin<Routine>;
+    with
+        SaveMixin<CreateRoutineDBParams, Routine>,
+        WatchMixin<Routine>,
+        GetByIdMixin<Routine>;
