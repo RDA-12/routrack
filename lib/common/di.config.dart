@@ -33,6 +33,9 @@ import 'package:routrack/routine/presentation/bloc/routine_mutation_bloc.dart'
     as _i142;
 import 'package:routrack/routine/presentation/bloc/routines_bloc.dart' as _i215;
 import 'package:routrack/routine/routine.dart' as _i617;
+import 'package:routrack/tracker/data/repositories/drift_tracker_repository.dart'
+    as _i825;
+import 'package:routrack/tracker/domain/domain.dart' as _i396;
 import 'package:routrack/tracker/domain/repositories/repositories.dart'
     as _i227;
 import 'package:routrack/tracker/domain/use_case/track_routine.dart' as _i571;
@@ -70,6 +73,14 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i547.RoutineRepository>(
       () => _i85.DriftRoutineRepository(
+        db: gh<_i336.AppDatabase>(),
+        uidGenerator: gh<_i336.UidGenerator>(),
+        clock: gh<_i336.AppClock>(),
+      ),
+      registerFor: {_prod},
+    );
+    gh.lazySingleton<_i396.TrackerRepository>(
+      () => _i825.DriftTrackerRepository(
         db: gh<_i336.AppDatabase>(),
         uidGenerator: gh<_i336.UidGenerator>(),
         clock: gh<_i336.AppClock>(),

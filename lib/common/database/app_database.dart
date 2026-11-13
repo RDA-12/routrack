@@ -9,7 +9,7 @@ part 'app_database.g.dart';
 
 @LazySingleton(env: [Environment.prod])
 /// Main database for the app
-@DriftDatabase(tables: [RoutineTable, ScheduleTable])
+@DriftDatabase(tables: [RoutineTable, ScheduleTable, TrackerTable])
 class AppDatabase extends _$AppDatabase {
   /// Creates new [AppDatabase]
   factory() => AppDatabase._internal(_openConnection());

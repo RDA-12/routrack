@@ -759,11 +759,385 @@ class ScheduleTableCompanion extends UpdateCompanion<ScheduleTableData> {
   }
 }
 
+class $TrackerTableTable extends TrackerTable
+    with TableInfo<$TrackerTableTable, TrackerTableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TrackerTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _routineIdMeta = const VerificationMeta(
+    'routineId',
+  );
+  @override
+  late final GeneratedColumn<String> routineId = GeneratedColumn<String>(
+    'routine_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES routines (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
+    'date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    createdAt,
+    updatedAt,
+    routineId,
+    date,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'trackers';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<TrackerTableData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('routine_id')) {
+      context.handle(
+        _routineIdMeta,
+        routineId.isAcceptableOrUnknown(data['routine_id']!, _routineIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_routineIdMeta);
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+        _dateMeta,
+        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  TrackerTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TrackerTableData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      routineId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}routine_id'],
+      )!,
+      date: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date'],
+      )!,
+    );
+  }
+
+  @override
+  $TrackerTableTable createAlias(String alias) {
+    return $TrackerTableTable(attachedDatabase, alias);
+  }
+}
+
+class TrackerTableData extends DataClass
+    implements Insertable<TrackerTableData> {
+  /// ID of this data
+  final String id;
+
+  /// When this routine created
+  final DateTime createdAt;
+
+  /// When the last time this routine updated
+  final DateTime updatedAt;
+
+  /// ID of the routine this tracker track
+  final String routineId;
+
+  /// When the routine happened
+  final DateTime date;
+  const TrackerTableData({
+    required this.id,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.routineId,
+    required this.date,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['routine_id'] = Variable<String>(routineId);
+    map['date'] = Variable<DateTime>(date);
+    return map;
+  }
+
+  TrackerTableCompanion toCompanion(bool nullToAbsent) {
+    return TrackerTableCompanion(
+      id: Value(id),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      routineId: Value(routineId),
+      date: Value(date),
+    );
+  }
+
+  factory TrackerTableData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TrackerTableData(
+      id: serializer.fromJson<String>(json['id']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      routineId: serializer.fromJson<String>(json['routineId']),
+      date: serializer.fromJson<DateTime>(json['date']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'routineId': serializer.toJson<String>(routineId),
+      'date': serializer.toJson<DateTime>(date),
+    };
+  }
+
+  TrackerTableData copyWith({
+    String? id,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? routineId,
+    DateTime? date,
+  }) => TrackerTableData(
+    id: id ?? this.id,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    routineId: routineId ?? this.routineId,
+    date: date ?? this.date,
+  );
+  TrackerTableData copyWithCompanion(TrackerTableCompanion data) {
+    return TrackerTableData(
+      id: data.id.present ? data.id.value : this.id,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      routineId: data.routineId.present ? data.routineId.value : this.routineId,
+      date: data.date.present ? data.date.value : this.date,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TrackerTableData(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('routineId: $routineId, ')
+          ..write('date: $date')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, createdAt, updatedAt, routineId, date);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TrackerTableData &&
+          other.id == this.id &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.routineId == this.routineId &&
+          other.date == this.date);
+}
+
+class TrackerTableCompanion extends UpdateCompanion<TrackerTableData> {
+  final Value<String> id;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> routineId;
+  final Value<DateTime> date;
+  final Value<int> rowid;
+  const TrackerTableCompanion({
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.routineId = const Value.absent(),
+    this.date = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  TrackerTableCompanion.insert({
+    required String id,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    required String routineId,
+    required DateTime date,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt),
+       routineId = Value(routineId),
+       date = Value(date);
+  static Insertable<TrackerTableData> custom({
+    Expression<String>? id,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? routineId,
+    Expression<DateTime>? date,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (routineId != null) 'routine_id': routineId,
+      if (date != null) 'date': date,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  TrackerTableCompanion copyWith({
+    Value<String>? id,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? routineId,
+    Value<DateTime>? date,
+    Value<int>? rowid,
+  }) {
+    return TrackerTableCompanion(
+      id: id ?? this.id,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      routineId: routineId ?? this.routineId,
+      date: date ?? this.date,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (routineId.present) {
+      map['routine_id'] = Variable<String>(routineId.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<DateTime>(date.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TrackerTableCompanion(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('routineId: $routineId, ')
+          ..write('date: $date, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $RoutineTableTable routineTable = $RoutineTableTable(this);
   late final $ScheduleTableTable scheduleTable = $ScheduleTableTable(this);
+  late final $TrackerTableTable trackerTable = $TrackerTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -771,6 +1145,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     routineTable,
     scheduleTable,
+    trackerTable,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -780,6 +1155,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('schedules', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'routines',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('trackers', kind: UpdateKind.delete)],
     ),
   ]);
   @override
@@ -822,6 +1204,24 @@ final class $$RoutineTableTableReferences
     ).filter((f) => f.routineId.id.sqlEquals($_itemColumn<String>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_scheduleTableRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$TrackerTableTable, List<TrackerTableData>>
+  _trackerTableRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.trackerTable,
+    aliasName: 'routines__id__trackers__routine_id',
+  );
+
+  $$TrackerTableTableProcessedTableManager get trackerTableRefs {
+    final manager = $$TrackerTableTableTableManager(
+      $_db,
+      $_db.trackerTable,
+    ).filter((f) => f.routineId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_trackerTableRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -873,6 +1273,31 @@ class $$RoutineTableTableFilterComposer
           }) => $$ScheduleTableTableFilterComposer(
             $db: $db,
             $table: $db.scheduleTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> trackerTableRefs(
+    Expression<bool> Function($$TrackerTableTableFilterComposer f) f,
+  ) {
+    final $$TrackerTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.trackerTable,
+      getReferencedColumn: (t) => t.routineId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TrackerTableTableFilterComposer(
+            $db: $db,
+            $table: $db.trackerTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -958,6 +1383,31 @@ class $$RoutineTableTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> trackerTableRefs<T extends Object>(
+    Expression<T> Function($$TrackerTableTableAnnotationComposer a) f,
+  ) {
+    final $$TrackerTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.trackerTable,
+      getReferencedColumn: (t) => t.routineId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TrackerTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.trackerTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$RoutineTableTableTableManager
@@ -973,7 +1423,10 @@ class $$RoutineTableTableTableManager
           $$RoutineTableTableUpdateCompanionBuilder,
           (RoutineTableData, $$RoutineTableTableReferences),
           RoutineTableData,
-          PrefetchHooks Function({bool scheduleTableRefs})
+          PrefetchHooks Function({
+            bool scheduleTableRefs,
+            bool trackerTableRefs,
+          })
         > {
   $$RoutineTableTableTableManager(_$AppDatabase db, $RoutineTableTable table)
     : super(
@@ -1022,39 +1475,61 @@ class $$RoutineTableTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({scheduleTableRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [
-                if (scheduleTableRefs) db.scheduleTable,
-              ],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (scheduleTableRefs)
-                    await $_getPrefetchedDataByColumns<
-                      RoutineTableData,
-                      $RoutineTableTable,
-                      ScheduleTableData,
-                      $ScheduleTableTable
-                    >(
-                      currentTable: table,
-                      referencedTable: $$RoutineTableTableReferences
-                          ._scheduleTableRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$RoutineTableTableReferences(
-                            db,
-                            table,
-                            p0,
-                          ).scheduleTableRefs,
-                      currentColumn: 'id',
-                      referencedColumn: 'routine_id',
-                      typedResults: items,
-                    ),
-                ];
+          prefetchHooksCallback:
+              ({scheduleTableRefs = false, trackerTableRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (scheduleTableRefs) db.scheduleTable,
+                    if (trackerTableRefs) db.trackerTable,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (scheduleTableRefs)
+                        await $_getPrefetchedDataByColumns<
+                          RoutineTableData,
+                          $RoutineTableTable,
+                          ScheduleTableData,
+                          $ScheduleTableTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$RoutineTableTableReferences
+                              ._scheduleTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$RoutineTableTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).scheduleTableRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'routine_id',
+                          typedResults: items,
+                        ),
+                      if (trackerTableRefs)
+                        await $_getPrefetchedDataByColumns<
+                          RoutineTableData,
+                          $RoutineTableTable,
+                          TrackerTableData,
+                          $TrackerTableTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$RoutineTableTableReferences
+                              ._trackerTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$RoutineTableTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).trackerTableRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'routine_id',
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
               },
-            );
-          },
         ),
       );
 }
@@ -1071,7 +1546,7 @@ typedef $$RoutineTableTableProcessedTableManager =
       $$RoutineTableTableUpdateCompanionBuilder,
       (RoutineTableData, $$RoutineTableTableReferences),
       RoutineTableData,
-      PrefetchHooks Function({bool scheduleTableRefs})
+      PrefetchHooks Function({bool scheduleTableRefs, bool trackerTableRefs})
     >;
 typedef $$ScheduleTableTableCreateCompanionBuilder =
     ScheduleTableCompanion Function({
@@ -1417,6 +1892,322 @@ typedef $$ScheduleTableTableProcessedTableManager =
       ScheduleTableData,
       PrefetchHooks Function({bool routineId})
     >;
+typedef $$TrackerTableTableCreateCompanionBuilder =
+    TrackerTableCompanion Function({
+      required String id,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+      required String routineId,
+      required DateTime date,
+      Value<int> rowid,
+    });
+typedef $$TrackerTableTableUpdateCompanionBuilder =
+    TrackerTableCompanion Function({
+      Value<String> id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> routineId,
+      Value<DateTime> date,
+      Value<int> rowid,
+    });
+
+final class $$TrackerTableTableReferences
+    extends
+        BaseReferences<_$AppDatabase, $TrackerTableTable, TrackerTableData> {
+  $$TrackerTableTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $RoutineTableTable _routineIdTable(_$AppDatabase db) =>
+      db.routineTable.createAlias('trackers__routine_id__routines__id');
+
+  $$RoutineTableTableProcessedTableManager get routineId {
+    final $_column = $_itemColumn<String>('routine_id')!;
+
+    final manager = $$RoutineTableTableTableManager(
+      $_db,
+      $_db.routineTable,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_routineIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$TrackerTableTableFilterComposer
+    extends Composer<_$AppDatabase, $TrackerTableTable> {
+  $$TrackerTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$RoutineTableTableFilterComposer get routineId {
+    final $$RoutineTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.routineId,
+      referencedTable: $db.routineTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RoutineTableTableFilterComposer(
+            $db: $db,
+            $table: $db.routineTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TrackerTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $TrackerTableTable> {
+  $$TrackerTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$RoutineTableTableOrderingComposer get routineId {
+    final $$RoutineTableTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.routineId,
+      referencedTable: $db.routineTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RoutineTableTableOrderingComposer(
+            $db: $db,
+            $table: $db.routineTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TrackerTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $TrackerTableTable> {
+  $$TrackerTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  $$RoutineTableTableAnnotationComposer get routineId {
+    final $$RoutineTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.routineId,
+      referencedTable: $db.routineTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RoutineTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.routineTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TrackerTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $TrackerTableTable,
+          TrackerTableData,
+          $$TrackerTableTableFilterComposer,
+          $$TrackerTableTableOrderingComposer,
+          $$TrackerTableTableAnnotationComposer,
+          $$TrackerTableTableCreateCompanionBuilder,
+          $$TrackerTableTableUpdateCompanionBuilder,
+          (TrackerTableData, $$TrackerTableTableReferences),
+          TrackerTableData,
+          PrefetchHooks Function({bool routineId})
+        > {
+  $$TrackerTableTableTableManager(_$AppDatabase db, $TrackerTableTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TrackerTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TrackerTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TrackerTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> routineId = const Value.absent(),
+                Value<DateTime> date = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => TrackerTableCompanion(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                routineId: routineId,
+                date: date,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required DateTime createdAt,
+                required DateTime updatedAt,
+                required String routineId,
+                required DateTime date,
+                Value<int> rowid = const Value.absent(),
+              }) => TrackerTableCompanion.insert(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                routineId: routineId,
+                date: date,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$TrackerTableTable, TrackerTableData>(table),
+                  $$TrackerTableTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({routineId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (routineId) {
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.routineId,
+                        referencedTable: $$TrackerTableTableReferences
+                            ._routineIdTable(db),
+                        referencedColumn: $$TrackerTableTableReferences
+                            ._routineIdTable(db)
+                            .id,
+                      ) as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$TrackerTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $TrackerTableTable,
+      TrackerTableData,
+      $$TrackerTableTableFilterComposer,
+      $$TrackerTableTableOrderingComposer,
+      $$TrackerTableTableAnnotationComposer,
+      $$TrackerTableTableCreateCompanionBuilder,
+      $$TrackerTableTableUpdateCompanionBuilder,
+      (TrackerTableData, $$TrackerTableTableReferences),
+      TrackerTableData,
+      PrefetchHooks Function({bool routineId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -1425,4 +2216,6 @@ class $AppDatabaseManager {
       $$RoutineTableTableTableManager(_db, _db.routineTable);
   $$ScheduleTableTableTableManager get scheduleTable =>
       $$ScheduleTableTableTableManager(_db, _db.scheduleTable);
+  $$TrackerTableTableTableManager get trackerTable =>
+      $$TrackerTableTableTableManager(_db, _db.trackerTable);
 }
