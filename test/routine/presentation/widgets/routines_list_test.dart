@@ -11,11 +11,13 @@ void main() {
     WidgetTester tester, {
     List<Routine>? routines,
     void Function(BuildContext, Routine)? onPressed,
+    VoidCallback? onCreatePressed,
   }) {
     return tester.pumpWidgetForTest(
       (context) => RoutinesList(
         routines: routines ?? mockRoutines,
         onPressed: onPressed,
+        onCreatePressed: onCreatePressed,
       ),
     );
   }
@@ -53,6 +55,12 @@ void main() {
             'You never create your routine data. '
             'Start create now and reach your ultimate goals ',
           );
+
+          final createButtonFinder = find.ancestor(
+            of: find.text('Create now'),
+            matching: find.byType(FilledButton),
+          );
+          expect(createButtonFinder, findsOneWidget);
         },
       );
     });
@@ -76,6 +84,30 @@ void main() {
           await tester.tap(finder);
 
           expect(pressedRoutine, mockRoutines.first);
+        },
+      );
+
+      testWidgets(
+        'calls onCreatePressed when create button is pressed',
+        (tester) async {
+          var pressed = false;
+          await pumpWidget(
+            tester,
+            routines: [],
+            onCreatePressed: () {
+              pressed = true;
+            },
+          );
+
+          final finder = find.ancestor(
+            of: find.text('Create now'),
+            matching: find.byType(FilledButton),
+          );
+          expect(finder, findsOneWidget);
+
+          await tester.tap(finder);
+
+          expect(pressed, isTrue);
         },
       );
     });

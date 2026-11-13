@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:routrack/common/common.dart';
 import 'package:routrack/core/app_exception.dart';
@@ -36,6 +37,18 @@ void main() {
         GoRoute(
           path: '/',
           builder: (_, _) => const HomePage(),
+        ),
+        GoRoute(
+          path: '/routines',
+          builder: (context, state) => const Placeholder(),
+          routes: [
+            GoRoute(
+              path: 'create',
+              builder: (context, state) => const Placeholder(
+                key: ValueKey('create-routine'),
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -106,8 +119,14 @@ void main() {
             widget.content,
             'There is nothing to do today. '
             'You can enjoy your time '
-            'or create new routine this day.',
+            'or create new routine for this day.',
           );
+
+          final createButtonFinder = find.ancestor(
+            of: find.text('Create now'),
+            matching: find.byType(FilledButton),
+          );
+          expect(createButtonFinder, findsOneWidget);
         },
       );
 
@@ -140,6 +159,30 @@ void main() {
           expect(finder, findsOneWidget);
           expect(widget.title, 'Failed to load home data');
           expect(widget.exception, AppException.test());
+        },
+      );
+    });
+
+    group('Interactions', () {
+      testWidgets(
+        'go to CreateRoutinePage when create routine button is pressed',
+        (tester) async {
+          whenListen(
+            homeBloc,
+            Stream.value(const HomeLoadingSuccess(todayRoutines: [])),
+            initialState: const HomeLoadingSuccess(todayRoutines: []),
+          );
+          await pumpWidget(tester);
+
+          final buttonFinder = find.ancestor(
+            of: find.text('Create now'),
+            matching: find.byType(FilledButton),
+          );
+
+          await tester.tap(buttonFinder);
+          await tester.pumpAndSettle();
+
+          expect(find.byKey(const ValueKey('create-routine')), findsOneWidget);
         },
       );
     });

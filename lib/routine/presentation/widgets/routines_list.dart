@@ -9,6 +9,7 @@ class RoutinesList extends StatelessWidget {
   const new({
     required this.routines,
     this.onPressed,
+    this.onCreatePressed,
     super.key,
   });
 
@@ -18,14 +19,21 @@ class RoutinesList extends StatelessWidget {
   /// Invoked when a [Routine] is pressed
   final void Function(BuildContext context, Routine routine)? onPressed;
 
+  /// Invoked when create routine button is pressed
+  final VoidCallback? onCreatePressed;
+
   @override
   Widget build(BuildContext context) {
     if (routines.isEmpty) {
-      return const AppEmptyBox(
+      return AppEmptyBox(
         title: 'Routines empty',
         content:
             'You never create your routine data. '
             'Start create now and reach your ultimate goals ',
+        action: FilledButton(
+          onPressed: onCreatePressed,
+          child: const Text('Create now'),
+        ),
       );
     }
     return ListView.separated(

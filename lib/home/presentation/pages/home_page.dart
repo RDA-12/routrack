@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:routrack/common/common.dart';
@@ -33,12 +35,20 @@ class HomePage extends StatelessWidget {
                       );
                     case HomeLoadingSuccess(:final todayRoutines):
                       if (todayRoutines.isEmpty) {
-                        return const AppEmptyBox(
+                        return AppEmptyBox(
                           title: 'You are free today!',
                           content:
                               'There is nothing to do today. '
                               'You can enjoy your time '
-                              'or create new routine this day.',
+                              'or create new routine for this day.',
+                          action: FilledButton(
+                            onPressed: () {
+                              unawaited(
+                                const CreateRoutineRoute().push<void>(context),
+                              );
+                            },
+                            child: const Text('Create now'),
+                          ),
                         );
                       }
                       return RoutinesList(routines: todayRoutines);

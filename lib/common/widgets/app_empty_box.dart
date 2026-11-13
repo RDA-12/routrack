@@ -8,6 +8,7 @@ class AppEmptyBox extends StatelessWidget {
   const new({
     this.title,
     this.content = 'Data is empty',
+    this.action,
     super.key,
   });
 
@@ -19,18 +20,34 @@ class AppEmptyBox extends StatelessWidget {
   /// Default to 'Data is empty'
   final String content;
 
+  /// Action that can be taken by user, typically a Button or list of Button'
+  ///
+  /// It will be placed at the bottom of [content]
+  final Widget? action;
+
   @override
   Widget build(BuildContext context) {
     return Column(
-      spacing: 8,
+      spacing: 16,
       mainAxisAlignment: .center,
       children: [
-        if (title != null)
-          Text(
-            title!,
-            style: context.text.headlineSmall,
-          ),
-        Text(content),
+        Column(
+          spacing: 8,
+          mainAxisAlignment: .center,
+          children: [
+            if (title != null)
+              Text(
+                title!,
+                textAlign: .center,
+                style: context.text.headlineSmall,
+              ),
+            Text(
+              content,
+              textAlign: .center,
+            ),
+          ],
+        ),
+        ?action,
       ],
     );
   }
