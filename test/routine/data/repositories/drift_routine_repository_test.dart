@@ -145,5 +145,46 @@ void main() {
         },
       );
     });
+
+    group('getById', () {
+      test(
+        'returns success with correct routine when routine exists',
+        () async {
+          final result = await repository.save(params);
+
+          final expected = (result as AppResultSuccess<Routine>).data;
+
+          final actual = await repository.getById(expected.id);
+
+          expect(actual, AppResult.success(expected));
+        },
+      );
+
+      test(
+        'returns failed with NotFoundException when routine is not exists',
+        () async {
+          final result = await repository.getById('not-exists');
+
+          result.expectFailedWith(
+            NotFoundException(entity: .routine, id: 'not-exists'),
+          );
+        },
+      );
+
+      test(
+        'returns failed with correct exception '
+        'when unexpected exception happened',
+        () async {
+          final e = Exception();
+          whenCalling(Invocation.method(#getById, [uid]))
+              .on(repository)
+              .thenThrow(e);
+
+          final result = await repository.getById(uid);
+
+          result.expectFailedWith(UnexpectedException(exception: e));
+        },
+      );
+    });
   });
 }

@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:drift/drift.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mock_exceptions/mock_exceptions.dart';
 import 'package:routrack/common/common.dart';
@@ -95,7 +96,27 @@ final class DriftRoutineRepository implements RoutineRepository {
 
   @override
   Future<AppResult<Routine>> getById(String id) async {
-    // TODO(RDA12): implement getById
-    throw UnimplementedError();
+    try {
+      maybeThrowException(this, Invocation.method(#getById, [id]));
+      final query = _db.select(_db.routineTable).join([
+        leftOuterJoin(
+          _db.scheduleTable,
+          _db.routineTable.id.equalsExp(_db.scheduleTable.routineId),
+        ),
+      ]);
+      final result = await query.getSingleOrNull();
+      if (result == null) {
+        return AppResult.failed(NotFoundException(entity: .routine, id: id));
+      }
+      final routineDB = result.readTable(_db.routineTable);
+      final scheduleDB = result.readTable(_db.scheduleTable);
+      return AppResult.success(
+        routineDB.toDomain(
+          activeSchedule: scheduleDB.toDomain(),
+        ),
+      );
+    } on Exception catch (e) {
+      return AppResult.failed(UnexpectedException(exception: e));
+    }
   }
 }
