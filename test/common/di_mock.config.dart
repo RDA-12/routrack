@@ -18,12 +18,14 @@ import 'package:routrack/common/database/database.dart' as _i889;
 import 'package:routrack/common/uid_generator.dart' as _i181;
 import 'package:routrack/home/home.dart' as _i350;
 import 'package:routrack/routine/routine.dart' as _i617;
+import 'package:routrack/tracker/tracker.dart' as _i614;
 import 'package:uuid/uuid.dart' as _i706;
 
 import '../home/presentation/bloc/home_bloc_mocks.dart' as _i772;
 import '../routine/data/repositories/routine_repository_mocks.dart' as _i212;
 import '../routine/domain/use_cases/routine_use_cases_mock.dart' as _i170;
 import '../routine/presentation/bloc/routine_bloc_mock.dart' as _i477;
+import '../tracker/data/repositories/tracker_repository_mocks.dart' as _i68;
 import 'app_clock_mock.dart' as _i788;
 import 'database/app_database_mock.dart' as _i879;
 import 'external_module_mock.dart' as _i888;
@@ -64,8 +66,16 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i772.MockHomeBloc(),
       registerFor: {_test},
     );
+    gh.lazySingleton<_i614.TrackerRepository>(
+      () => _i68.MockTrackerRepository(),
+      registerFor: {_test},
+    );
     gh.lazySingleton<_i617.RoutinesBloc>(
       () => _i477.MockRoutinesBloc(),
+      registerFor: {_test},
+    );
+    gh.lazySingleton<_i617.GetRoutineByIdUseCase>(
+      () => _i170.MockGetRoutineByIdUseCase(),
       registerFor: {_test},
     );
     gh.lazySingleton<_i81.AppClock>(
