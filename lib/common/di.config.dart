@@ -39,6 +39,8 @@ import 'package:routrack/tracker/domain/domain.dart' as _i396;
 import 'package:routrack/tracker/domain/repositories/repositories.dart'
     as _i227;
 import 'package:routrack/tracker/domain/use_case/track_routine.dart' as _i571;
+import 'package:routrack/tracker/presentation/bloc/routine_tracker_bloc.dart'
+    as _i1068;
 import 'package:uuid/uuid.dart' as _i706;
 
 const String _prod = 'prod';
@@ -114,6 +116,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i215.RoutinesBloc>(
       () => _i215.RoutinesBloc(watchRoutines: gh<_i547.WatchRoutines>()),
+      registerFor: {_prod},
+    );
+    gh.factory<_i1068.RoutineTrackerBloc>(
+      () => _i1068.RoutineTrackerBloc(
+        trackRoutineUseCase: gh<_i396.TrackRoutineUseCase>(),
+      ),
       registerFor: {_prod},
     );
     gh.factory<_i797.HomeBloc>(
