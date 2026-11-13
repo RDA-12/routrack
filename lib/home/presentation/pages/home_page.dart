@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:routrack/common/common.dart';
-import 'package:routrack/home/presentation/bloc/home_bloc.dart';
-import 'package:routrack/routine/routine.dart';
+import 'package:routrack/home/presentation/bloc/bloc.dart';
+import 'package:routrack/tracker/presentation/widgets/trackable_routine_list.dart';
 
 /// Page to be showed on home
 class HomePage extends StatelessWidget {
@@ -51,7 +51,11 @@ class HomePage extends StatelessWidget {
                           ),
                         );
                       }
-                      return RoutinesList(routines: todayRoutines);
+                      return TrackableRoutineList(
+                        routines: todayRoutines,
+                        isTracked: (trackable) =>
+                            trackable.lastTracked?.date == DateTime.now(),
+                      );
                     case HomeLoadingFailed(:final exception):
                       return Center(
                         child: AppExceptionBox(

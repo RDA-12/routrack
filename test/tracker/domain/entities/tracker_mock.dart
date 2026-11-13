@@ -7,3 +7,8 @@ final mockTracker = Tracker(
   routineId: mockRoutine.id,
   date: DateTime.now(),
 );
+
+final mockTrackableRoutine = TrackableRoutine(
+  routine: mockRoutine,
+  lastTracked: mockTracker,
+);

@@ -6,11 +6,11 @@ import 'package:mocktail/mocktail.dart';
 import 'package:routrack/common/common.dart';
 import 'package:routrack/core/app_exception.dart';
 import 'package:routrack/home/home.dart';
-import 'package:routrack/routine/routine.dart';
+import 'package:routrack/tracker/tracker.dart';
 
 import '../../../common/di_mock.dart';
 import '../../../helper.dart';
-import '../../../routine/domain/entities/routine_mocks.dart';
+import '../../../tracker/domain/entities/tracker_mock.dart';
 
 void main() {
   late HomeBloc homeBloc;
@@ -21,8 +21,8 @@ void main() {
     homeBloc = di<HomeBloc>();
     whenListen(
       homeBloc,
-      Stream.value(HomeLoadingSuccess(todayRoutines: mockRoutines)),
-      initialState: HomeLoadingSuccess(todayRoutines: mockRoutines),
+      Stream.value(HomeLoadingSuccess(todayRoutines: [mockTrackableRoutine])),
+      initialState: HomeLoadingSuccess(todayRoutines: [mockTrackableRoutine]),
     );
     when(homeBloc.close).thenAnswer((_) async {});
   });
@@ -131,15 +131,15 @@ void main() {
       );
 
       testWidgets(
-        'shows RoutinesList when state is loaded',
+        'shows TrackableRoutineList when state is loaded',
         (tester) async {
           await pumpWidget(tester);
 
-          final finder = find.byType(RoutinesList);
-          final widget = tester.widget<RoutinesList>(finder);
+          final finder = find.byType(TrackableRoutineList);
+          final widget = tester.widget<TrackableRoutineList>(finder);
 
           expect(finder, findsOneWidget);
-          expect(widget.routines, mockRoutines);
+          expect(widget.routines, [mockTrackableRoutine]);
         },
       );
 

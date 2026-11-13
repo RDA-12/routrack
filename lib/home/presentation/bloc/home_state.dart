@@ -30,8 +30,8 @@ final class HomeLoadingSuccess extends HomeState {
     required this.todayRoutines,
   });
 
-  /// List of [Routine ] that need to be done to day
-  final List<Routine> todayRoutines;
+  /// List of [TrackableRoutine] that need to be done to day
+  final List<TrackableRoutine> todayRoutines;
 
   @override
   List<Object> get props => [todayRoutines];

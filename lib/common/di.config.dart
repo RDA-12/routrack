@@ -39,8 +39,11 @@ import 'package:routrack/tracker/domain/domain.dart' as _i396;
 import 'package:routrack/tracker/domain/repositories/repositories.dart'
     as _i227;
 import 'package:routrack/tracker/domain/use_case/track_routine.dart' as _i571;
+import 'package:routrack/tracker/domain/use_case/watch_latest_routine_tracker.dart'
+    as _i762;
 import 'package:routrack/tracker/presentation/bloc/routine_tracker_bloc.dart'
     as _i1068;
+import 'package:routrack/tracker/tracker.dart' as _i614;
 import 'package:uuid/uuid.dart' as _i706;
 
 const String _prod = 'prod';
@@ -89,6 +92,12 @@ extension GetItInjectableX on _i174.GetIt {
       ),
       registerFor: {_prod},
     );
+    gh.lazySingleton<_i762.WatchLatestRoutineTrackerUseCase>(
+      () => _i762.WatchLatestRoutineTrackerUseCase(
+        trackerRepository: gh<_i227.TrackerRepository>(),
+      ),
+      registerFor: {_prod},
+    );
     gh.lazySingleton<_i844.CreateRoutineUseCase>(
       () => _i844.CreateRoutineUseCase(
         routineRepository: gh<_i541.RoutineRepository>(),
@@ -114,6 +123,15 @@ extension GetItInjectableX on _i174.GetIt {
       ),
       registerFor: {_prod},
     );
+    gh.factory<_i797.HomeBloc>(
+      () => _i797.HomeBloc(
+        watchRoutines: gh<_i617.WatchRoutines>(),
+        watchLatestRoutineTrackerUseCase:
+            gh<_i614.WatchLatestRoutineTrackerUseCase>(),
+        clock: gh<_i336.AppClock>(),
+      ),
+      registerFor: {_prod},
+    );
     gh.factory<_i215.RoutinesBloc>(
       () => _i215.RoutinesBloc(watchRoutines: gh<_i547.WatchRoutines>()),
       registerFor: {_prod},
@@ -121,13 +139,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i1068.RoutineTrackerBloc>(
       () => _i1068.RoutineTrackerBloc(
         trackRoutineUseCase: gh<_i396.TrackRoutineUseCase>(),
-      ),
-      registerFor: {_prod},
-    );
-    gh.factory<_i797.HomeBloc>(
-      () => _i797.HomeBloc(
-        watchRoutines: gh<_i617.WatchRoutines>(),
-        clock: gh<_i336.AppClock>(),
       ),
       registerFor: {_prod},
     );
