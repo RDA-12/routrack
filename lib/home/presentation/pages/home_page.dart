@@ -51,10 +51,22 @@ class HomePage extends StatelessWidget {
                           ),
                         );
                       }
-                      return TrackableRoutineList(
-                        routines: todayRoutines,
-                        isTracked: (trackable) =>
-                            trackable.lastTracked?.date == DateTime.now(),
+                      return Column(
+                        spacing: 8,
+                        crossAxisAlignment: .start,
+                        children: [
+                          Text(
+                            "Today's routines",
+                            style: context.text.titleMedium,
+                          ),
+                          Expanded(
+                            child: TrackableRoutineList(
+                              routines: todayRoutines,
+                              isTracked: (trackable) =>
+                                  trackable.lastTracked?.date == DateTime.now(),
+                            ),
+                          ),
+                        ],
                       );
                     case HomeLoadingFailed(:final exception):
                       return Center(

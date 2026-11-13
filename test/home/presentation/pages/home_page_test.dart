@@ -140,6 +140,9 @@ void main() {
 
           expect(finder, findsOneWidget);
           expect(widget.routines, [mockTrackableRoutine]);
+
+          final titleFinder = find.text("Today's routines");
+          expect(titleFinder, findsOneWidget);
         },
       );
 
