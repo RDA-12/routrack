@@ -68,7 +68,12 @@ void main() {
           ),
           RoutineTrackerState(
             loadingIds: const {'uid'},
-            notice: CreatedNoticeUI(data: mockRoutine),
+            notice: CreatedNoticeUI(
+              data: TrackableRoutine(
+                routine: mockRoutine,
+                lastTracked: mockTracker,
+              ),
+            ),
           ),
         ],
       );
@@ -90,7 +95,10 @@ void main() {
           ),
           RoutineTrackerState(
             notice: FailedNoticeUI(
-              data: mockRoutine,
+              data: TrackableRoutine(
+                routine: mockRoutine,
+                lastTracked: null,
+              ),
               operation: .create,
               exception: AppException.test(),
             ),

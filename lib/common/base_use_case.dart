@@ -18,5 +18,5 @@ abstract interface class FutureUseCase<P, R> {
 /// [R] is data type streamed by the use case. It wrapped with [AppResult].
 abstract interface class StreamUseCase<P, R> {
   /// Returns stream data of [R]
-  Stream<AppResult<R>> call([P params]);
+  Stream<AppResult<R>> call([P? params]);
 }

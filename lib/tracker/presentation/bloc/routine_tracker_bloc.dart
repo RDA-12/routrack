@@ -39,13 +39,21 @@ class RoutineTrackerBloc
     final result = await _trackRoutineUseCase(
       TrackRoutineParams(routineId: event.routine.id, date: event.date),
     );
-    late final NoticeUI<Routine> notice;
+    late final NoticeUI<TrackableRoutine> notice;
     switch (result) {
-      case AppResultSuccess<Tracker>():
-        notice = CreatedNoticeUI(data: event.routine);
+      case AppResultSuccess<Tracker>(:final data):
+        notice = CreatedNoticeUI(
+          data: TrackableRoutine(
+            routine: event.routine,
+            lastTracked: data,
+          ),
+        );
       case AppResultFailed<Tracker>(:final exception):
         notice = FailedNoticeUI(
-          data: event.routine,
+          data: TrackableRoutine(
+            routine: event.routine,
+            lastTracked: null,
+          ),
           operation: .create,
           exception: exception,
         );

@@ -12,7 +12,7 @@ final class RoutineTrackerState extends Equatable {
   final Set<String> loadingIds;
 
   /// Notice that need to be showed to user
-  final NoticeUI<Routine>? notice;
+  final NoticeUI<TrackableRoutine>? notice;
 
   @override
   List<Object?> get props => [loadingIds, notice];
