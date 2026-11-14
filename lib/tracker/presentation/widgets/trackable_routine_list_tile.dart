@@ -26,20 +26,50 @@ class TrackableRoutineListTile extends StatelessWidget {
   /// Invoked when this tile is pressed
   final OnRoutineTrackChanged? onChanged;
 
+  Future<bool?> _showConfirmationDialog(BuildContext context) async {
+    if (isTracked) return null;
+    return await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Did you finish "${routine.name}"?'),
+          content: const Text(
+            "Lets get it logged so you can see how far you've come",
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context, false);
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context, true);
+              },
+              child: const Text('Log it'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return CheckboxListTile(
       title: Text(routine.name),
       controlAffinity: .leading,
       value: isTracked,
-      onChanged: onChanged == null
+      onChanged: onChanged == null || isTracked
           ? null
-          : (value) {
-              if (value == true) {
-                onChanged!(context, isTracked: value!);
-              } else {
-                onChanged!(context, isTracked: false);
-              }
+          : (value) async {
+              if (value == null || !value) return;
+              final confirmToTrack =
+                  await _showConfirmationDialog(context) ?? false;
+              if (!context.mounted) return;
+              if (!confirmToTrack) return;
+              onChanged!(context, isTracked: true);
             },
     );
   }

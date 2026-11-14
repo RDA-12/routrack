@@ -79,6 +79,20 @@ void main() {
     });
 
     group('Interactions', () {
+      Future<void> confirmToLog(WidgetTester tester) async {
+        final dialogFinder = find.byType(AlertDialog);
+        expect(dialogFinder, findsOneWidget);
+
+        final confirmButtonFinder = find.descendant(
+          of: dialogFinder,
+          matching: find.ancestor(
+            of: find.text('Log it'),
+            matching: find.byType(TextButton),
+          ),
+        );
+        await tester.tap(confirmButtonFinder);
+      }
+
       testWidgets(
         'calls onChanged when the tile is pressed with correct isTracked',
         (tester) async {
@@ -98,9 +112,63 @@ void main() {
 
           await tester.tap(finder);
           await tester.pumpAndSettle();
+          await confirmToLog(tester);
+          await tester.pumpAndSettle();
+
           expect(value, isTrue);
         },
       );
+
+      testWidgets('shows confirmation dialog when pressed', (tester) async {
+        await pumpWidget(tester, onChanged: (context, {required isTracked}) {});
+
+        final finder = find.ancestor(
+          of: find.text(mockRoutine.name),
+          matching: find.byType(CheckboxListTile),
+        );
+        expect(finder, findsOneWidget);
+        await tester.tap(finder);
+        await tester.pumpAndSettle();
+
+        final dialogFinder = find.byType(AlertDialog);
+        expect(dialogFinder, findsOneWidget);
+
+        final titleFinder = find.descendant(
+          of: dialogFinder,
+          matching: find.text('Did you finish "${mockRoutine.name}"?'),
+        );
+        expect(titleFinder, findsOneWidget);
+        await tester.ensureVisible(titleFinder);
+
+        final contentFinder = find.descendant(
+          of: dialogFinder,
+          matching: find.text(
+            "Lets get it logged so you can see how far you've come",
+          ),
+        );
+        expect(contentFinder, findsOneWidget);
+        await tester.ensureVisible(contentFinder);
+
+        final closeButtonFinder = find.descendant(
+          of: dialogFinder,
+          matching: find.ancestor(
+            of: find.text('Cancel'),
+            matching: find.byType(TextButton),
+          ),
+        );
+        expect(closeButtonFinder, findsOneWidget);
+        await tester.ensureVisible(closeButtonFinder);
+
+        final confirmButtonFinder = find.descendant(
+          of: dialogFinder,
+          matching: find.ancestor(
+            of: find.text('Log it'),
+            matching: find.byType(TextButton),
+          ),
+        );
+        expect(confirmButtonFinder, findsOneWidget);
+        await tester.ensureVisible(confirmButtonFinder);
+      });
     });
   });
 }
