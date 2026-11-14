@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:routrack/common/common.dart';
 import 'package:routrack/tracker/tracker.dart';
 
@@ -12,7 +13,7 @@ void main() {
       .mapIndexed(
         (index, it) => TrackableRoutine(
           routine: it,
-          lastTracked: index.isEven ? mockTracker : null,
+          lastTracked: index.isOdd ? mockTracker : null,
         ),
       )
       .toList();
@@ -46,7 +47,7 @@ void main() {
             expect(finder, findsOneWidget);
             await tester.ensureVisible(finder);
             final widget = tester.widget<TrackableRoutineListTile>(finder);
-            expect(widget.isTracked, index.isEven);
+            expect(widget.isTracked, index.isOdd);
           }
         },
       );
@@ -74,7 +75,7 @@ void main() {
         'calls onPressed when on of routines is pressed',
         (tester) async {
           TrackableRoutine? pressedTrackable;
-          var value = true;
+          var value = false;
           await pumpWidget(
             tester,
             onChanged: (context, trackable, {required isTracked}) {
@@ -88,12 +89,18 @@ void main() {
             matching: find.byType(TrackableRoutineListTile),
           );
           final widget = tester.widget<TrackableRoutineListTile>(finder);
-          expect(widget.isTracked, isTrue);
+          expect(widget.isTracked, isFalse);
 
           await tester.tap(finder);
+          await tester.pumpAndSettle();
+          final confirmButtonFinder = find.ancestor(
+            of: find.text('Log it'),
+            matching: find.byType(TextButton),
+          );
+          await tester.tap(confirmButtonFinder);
 
           expect(pressedTrackable, mockTrackableRoutines.first);
-          expect(value, isFalse);
+          expect(value, isTrue);
         },
       );
     });
