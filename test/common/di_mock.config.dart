@@ -27,6 +27,7 @@ import '../routine/domain/use_cases/routine_use_cases_mock.dart' as _i170;
 import '../routine/presentation/bloc/routine_bloc_mock.dart' as _i477;
 import '../tracker/data/repositories/tracker_repository_mocks.dart' as _i68;
 import '../tracker/domain/use_cases/tracker_use_cases_mock.dart' as _i982;
+import '../tracker/presentation/bloc/tracker_bloc_mock.dart' as _i691;
 import 'app_clock_mock.dart' as _i788;
 import 'database/app_database_mock.dart' as _i879;
 import 'external_module_mock.dart' as _i888;
@@ -45,6 +46,10 @@ extension GetItInjectableX on _i174.GetIt {
     final externalModule = _$ExternalModule();
     gh.lazySingleton<_i617.CreateRoutineUseCase>(
       () => _i170.MockCreateRoutineUseCase(),
+      registerFor: {_test},
+    );
+    gh.lazySingleton<_i614.RoutineTrackerBloc>(
+      () => _i691.MockRoutineTrackerBloc(),
       registerFor: {_test},
     );
     gh.lazySingleton<_i617.RoutineMutationBloc>(

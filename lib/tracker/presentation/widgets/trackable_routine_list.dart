@@ -6,7 +6,7 @@ import 'package:routrack/tracker/presentation/widgets/trackable_routine_list_til
 /// Signature callback when a routine's tracked state is changed
 typedef OnTracktableRoutineChanged = void Function(
   BuildContext context,
-  TrackableRoutine routine, {
+  TrackableRoutine trackable, {
   required bool isTracked,
 });
 
