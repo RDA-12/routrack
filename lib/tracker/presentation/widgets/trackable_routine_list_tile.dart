@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:routrack/common/common.dart';
 import 'package:routrack/routine/routine.dart';
 
 /// Signature callback for tracked routine changes
@@ -58,10 +59,17 @@ class TrackableRoutineListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CheckboxListTile(
-      title: Text(routine.name),
+      title: Text(
+        routine.name,
+        style: TextStyle(
+          color: isTracked ? context.color.onPrimaryContainer : null,
+        ),
+      ),
       controlAffinity: .leading,
       value: isTracked,
-      onChanged: onChanged == null || isTracked
+      selected: isTracked,
+      selectedTileColor: context.color.primaryContainer,
+      onChanged: onChanged == null
           ? null
           : (value) async {
               if (value == null || !value) return;
