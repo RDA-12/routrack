@@ -147,6 +147,33 @@ void main() {
     });
 
     group('getById', () {
+      setUp(() async {
+        for (var i = 0; i < 5; i++) {
+          final returned = await database
+              .into(database.routineTable)
+              .insertReturning(
+                RoutineTableCompanion.insert(
+                  id: '$i',
+                  name: 'routine $i',
+                  createdAt: DateTime.timestamp(),
+                  updatedAt: DateTime.timestamp(),
+                ),
+              );
+          await database
+              .into(database.scheduleTable)
+              .insert(
+                ScheduleTableCompanion.insert(
+                  id: '$i',
+                  createdAt: DateTime.timestamp(),
+                  updatedAt: DateTime.timestamp(),
+                  routineId: returned.id,
+                  recurrence: ['RRULE:FREQ=DAILY;BYDAY=TU'],
+                  status: .active,
+                ),
+              );
+        }
+      });
+
       test(
         'returns success with correct routine when routine exists',
         () async {

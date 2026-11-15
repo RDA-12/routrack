@@ -100,7 +100,7 @@ final class DriftRoutineRepository implements RoutineRepository {
           _db.scheduleTable,
           _db.routineTable.id.equalsExp(_db.scheduleTable.routineId),
         ),
-      ]);
+      ])..where(_db.routineTable.id.equals(id));
       final result = await query.getSingleOrNull();
       if (result == null) {
         return AppResult.failed(NotFoundException(entity: .routine, id: id));
