@@ -9,6 +9,7 @@ part of 'app_router.dart';
 List<RouteBase> get $appRoutes => [$homeShellRoute];
 
 RouteBase get $homeShellRoute => ShellRouteData.$route(
+  navigatorKey: HomeShellRoute.$navigatorKey,
   factory: $HomeShellRouteExtension._fromState,
   routes: [
     GoRouteData.$route(
@@ -24,6 +25,7 @@ RouteBase get $homeShellRoute => ShellRouteData.$route(
         GoRouteData.$route(
           path: 'create',
           hasOverriddenOnExit: false,
+          parentNavigatorKey: CreateRoutineRoute.$parentNavigatorKey,
           factory: $CreateRoutineRoute._fromState,
         ),
       ],

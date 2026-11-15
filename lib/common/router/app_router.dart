@@ -11,6 +11,7 @@ part 'app_router.g.dart';
 abstract class AppRouter {
   /// Config for app router
   static final config = GoRouter(
+    navigatorKey: rootNavigatorKey,
     initialLocation: '/',
     routes: $appRoutes,
   );
