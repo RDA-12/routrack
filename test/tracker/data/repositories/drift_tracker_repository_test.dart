@@ -15,7 +15,7 @@ void main() {
   final now = DateTime.now();
   final params = TrackRoutineParams(
     routineId: mockRoutine.id,
-    date: DateTime.now(),
+    date: now,
   );
   late AppDatabase database;
   late UidGenerator uidGenerator;
