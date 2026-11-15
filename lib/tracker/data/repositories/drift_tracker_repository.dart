@@ -55,6 +55,7 @@ final class DriftTrackerRepository implements TrackerRepository {
     final newestTracker = Subquery(
       _db.selectOnly(_db.trackerTable)
         ..addColumns([
+          _db.trackerTable.id,
           _db.trackerTable.routineId,
           maxDate,
         ])
@@ -69,7 +70,9 @@ final class DriftTrackerRepository implements TrackerRepository {
                 .equalsExp(
                   _db.trackerTable.routineId,
                 ) &
-            newestTracker.ref(maxDate).equalsExp(_db.trackerTable.date),
+            newestTracker
+                .ref(_db.trackerTable.id)
+                .equalsExp(_db.trackerTable.id),
       ),
     ]);
 
