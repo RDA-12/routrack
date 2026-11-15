@@ -113,8 +113,8 @@ class HomePage extends StatelessWidget {
                               child: TrackableRoutineList(
                                 routines: todayRoutines,
                                 isTracked: (trackable) =>
-                                    trackable.lastTracked?.date ==
-                                    DateTime.timestamp(),
+                                    trackable.lastTracked?.date.day ==
+                                    DateTime.timestamp().day,
                                 onChanged: _onTrackableRoutineChanged,
                               ),
                             ),

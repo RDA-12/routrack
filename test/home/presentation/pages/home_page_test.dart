@@ -13,6 +13,7 @@ import 'package:routrack/tracker/tracker.dart';
 
 import '../../../common/di_mock.dart';
 import '../../../helper.dart';
+import '../../../routine/domain/entities/routine_mocks.dart';
 import '../../../tracker/domain/entities/tracker_mock.dart';
 
 void main() {
@@ -201,6 +202,56 @@ void main() {
           expect(finder, findsOneWidget);
           expect(widget.title, 'Failed to load home data');
           expect(widget.exception, AppException.test());
+        },
+      );
+
+      testWidgets(
+        'shows correct tracked routine when state is loaded',
+        (tester) async {
+          final now = DateTime.timestamp();
+          final expectedTracked = TrackableRoutine(
+            routine: mockRoutine,
+            lastTracked: Tracker(
+              id: 'id',
+              routineId: mockRoutine.id,
+              date: now,
+            ),
+          );
+          final trackables = [
+            expectedTracked,
+            ...mockRoutines.map(
+              (it) => TrackableRoutine(
+                routine: it,
+                lastTracked: Tracker(
+                  id: 'tracker-${it.id}',
+                  routineId: it.id,
+                  date: now.subtract(const Duration(days: 1)),
+                ),
+              ),
+            ),
+          ];
+          whenListen(
+            homeBloc,
+            Stream.value(
+              HomeLoadingSuccess(todayRoutines: trackables),
+            ),
+            initialState: HomeLoadingSuccess(
+              todayRoutines: trackables,
+            ),
+          );
+          await pumpWidget(tester);
+
+          for (final trackable in trackables) {
+            final finder = find.ancestor(
+              of: find.text(trackable.routine.name),
+              matching: find.byType(TrackableRoutineListTile),
+            );
+            expect(finder, findsOneWidget);
+            await tester.ensureVisible(finder);
+
+            final widget = tester.widget<TrackableRoutineListTile>(finder);
+            expect(widget.isTracked, trackable == expectedTracked);
+          }
         },
       );
     });
