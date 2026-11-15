@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:material_ui/material_ui.dart';
+import 'package:routrack/common/router/app_router.dart';
 
 /// Shell for home
 ///
@@ -25,6 +28,13 @@ class HomeShell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: child,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          unawaited(const CreateRoutineRoute().push<void>(context));
+        },
+        child: const Icon(Icons.add_rounded),
+      ),
+      floatingActionButtonLocation: .centerDocked,
       bottomNavigationBar: NavigationBar(
         selectedIndex: selectedIndex,
         onDestinationSelected: onDestinationSelected,
