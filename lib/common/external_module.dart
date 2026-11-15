@@ -11,5 +11,5 @@ abstract class ExternalModule {
 
   /// [Clock] object
   @LazySingleton(env: [Environment.prod])
-  Clock get appClock => const Clock(DateTime.now);
+  Clock get appClock => const Clock(DateTime.timestamp);
 }

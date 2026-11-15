@@ -11,7 +11,7 @@ import '../../domain/entities/routine_mocks.dart';
 
 void main() {
   const uid = 'uid';
-  final now = DateTime.now().toUtc();
+  final now = DateTime.timestamp();
   final params = CreateRoutineDBParams(
     name: mockRoutine.name,
     recurrence: const ['RRULE:FREQ=DAILY;BYDAY=MO,TU'],

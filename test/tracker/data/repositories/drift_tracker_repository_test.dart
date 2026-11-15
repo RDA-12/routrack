@@ -12,7 +12,7 @@ import '../../../routine/domain/entities/routine_mocks.dart';
 
 void main() {
   const uid = 'uid';
-  final now = DateTime.now();
+  final now = DateTime.timestamp();
   final params = TrackRoutineParams(
     routineId: mockRoutine.id,
     date: now,

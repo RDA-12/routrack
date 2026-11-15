@@ -12,7 +12,7 @@ import '../../domain/entities/tracker_mock.dart';
 void main() {
   final params = TrackRoutineParams(
     routineId: mockRoutine.id,
-    date: DateTime.now(),
+    date: DateTime.timestamp(),
   );
   late TrackRoutineUseCase trackRoutineUseCase;
 

@@ -5,7 +5,7 @@ import '../../../routine/domain/entities/routine_mocks.dart';
 final mockTracker = Tracker(
   id: 'tracker-id',
   routineId: mockRoutine.id,
-  date: DateTime.now(),
+  date: DateTime.timestamp(),
 );
 
 final mockTrackableRoutine = TrackableRoutine(

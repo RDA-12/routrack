@@ -4,7 +4,7 @@ import 'package:routrack/tracker/tracker.dart';
 void main() {
   group('Tracker', () {
     test('equals on id, routineId, date', () {
-      final now = DateTime.now();
+      final now = DateTime.timestamp();
       final test = Tracker(
         id: 'id',
         routineId: 'routineId',

@@ -11,6 +11,6 @@ class AppClock {
 
   /// Returns current [DateTime] in UTC
   DateTime getCurrentDateTime() {
-    return _clock.now().toUtc();
+    return _clock.now();
   }
 }

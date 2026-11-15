@@ -6,7 +6,7 @@ import 'package:routrack/common/common.dart';
 import 'di_mock.dart';
 
 void main() {
-  final now = DateTime.now();
+  final now = DateTime.timestamp();
   late Clock mockClock;
   late AppClock appClock;
 
@@ -28,7 +28,7 @@ void main() {
       test('returns correct UTC DateTime from Clock', () {
         final result = appClock.getCurrentDateTime();
 
-        expect(result, now.toUtc());
+        expect(result, now);
         verify(mockClock.now).called(1);
       });
     });
