@@ -36,5 +36,20 @@ void main() {
       expect(test, isNot(equals(i3)));
       expect(test, isNot(equals(i4)));
     });
+
+    group('isSameDayAs', () {
+      test('returns correct bool', () {
+        final date = DateTime.utc(2026, 11, 10);
+        final test = Tracker(
+          id: 'id',
+          routineId: 'routineId',
+          date: date,
+        );
+        expect(test.isSameDayAs(date.add(const Duration(hours: 12))), isTrue);
+        expect(test.isSameDayAs(DateTime.utc(2016, 11, 10)), isFalse);
+        expect(test.isSameDayAs(DateTime.utc(2026, 9, 10)), isFalse);
+        expect(test.isSameDayAs(DateTime.utc(2026, 9, 5)), isFalse);
+      });
+    });
   });
 }

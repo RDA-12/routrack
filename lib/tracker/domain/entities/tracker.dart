@@ -14,6 +14,15 @@ class Tracker extends Equatable {
   /// When the routine is tracked
   final DateTime date;
 
+  /// Returns whether this [Tracker]'s date is in same day as [date]
+  bool isSameDayAs(DateTime date) {
+    final localTrackerDate = this.date.toLocal();
+    final localDate = date.toLocal();
+    return localTrackerDate.day == localDate.day &&
+        localTrackerDate.month == localDate.month &&
+        localTrackerDate.year == localDate.year;
+  }
+
   @override
   List<Object?> get props => [id, routineId, date];
 }

@@ -66,8 +66,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 TrackableRoutineUI(
                   trackable: trackable,
                   isTracked:
-                      trackable.lastTracked?.date.day ==
-                      _clock.getCurrentDateTime().day,
+                      trackable.lastTracked?.isSameDayAs(
+                        _clock.getCurrentDateTime(),
+                      ) ??
+                      false,
                 ),
               );
             }
