@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:routrack/common/common.dart';
@@ -12,7 +13,7 @@ import '../../../routine/domain/entities/routine_mocks.dart';
 import '../../../tracker/domain/entities/tracker_mock.dart';
 
 void main() {
-  final now = DateTime.utc(2026);
+  final now = DateTime.timestamp();
   final watchRoutinesParams = WatchRoutinesParams(date: now);
   late WatchRoutines watchRoutines;
   late WatchLatestRoutineTrackerUseCase watchLatestRoutineTrackerUseCase;
@@ -26,12 +27,12 @@ void main() {
   setUp(() {
     watchRoutines = di<WatchRoutines>();
     when(() => watchRoutines(any())).thenAnswer(
-      (_) => Stream.value(AppResult.success([mockRoutine])),
+      (_) => Stream.value(AppResult.success(mockRoutines)),
     );
 
     watchLatestRoutineTrackerUseCase = di<WatchLatestRoutineTrackerUseCase>();
     when(() => watchLatestRoutineTrackerUseCase())
-        .thenAnswer((_) => Stream.value(AppResult.success([mockTracker])));
+        .thenAnswer((_) => Stream.value(AppResult.success(mockTrackers)));
 
     clock = di<AppClock>();
     when(clock.getCurrentDateTime).thenReturn(now);
@@ -77,15 +78,17 @@ void main() {
         expect: () => <HomeState>[
           const HomeLoadingData(),
           HomeLoadingSuccess(
-            todayRoutines: [
-              TrackableRoutineUI(
-                trackable: TrackableRoutine(
-                  routine: mockRoutine,
-                  lastTracked: mockTracker,
-                ),
-                isTracked: false,
-              ),
-            ],
+            todayRoutines: mockRoutines.mapIndexed((index, it) {
+              final tracker = mockTrackers[index];
+              final trackable = TrackableRoutine(
+                routine: it,
+                lastTracked: tracker,
+              );
+              return TrackableRoutineUI(
+                trackable: trackable,
+                isTracked: index == 0,
+              );
+            }).toList(),
           ),
         ],
       );

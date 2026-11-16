@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:routrack/routine/routine.dart';
 import 'package:routrack/tracker/tracker.dart';
 
@@ -8,6 +9,14 @@ final mockTracker = Tracker(
   routineId: mockRoutine.id,
   date: DateTime.timestamp(),
 );
+
+final List<Tracker> mockTrackers = mockRoutines.mapIndexed((index, it) {
+  return Tracker(
+    id: 'tracker-$index',
+    routineId: it.id,
+    date: DateTime.timestamp().add(Duration(days: -index)),
+  );
+}).toList();
 
 final mockTrackableRoutine = TrackableRoutine(
   routine: mockRoutine,
