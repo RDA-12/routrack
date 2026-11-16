@@ -13,7 +13,6 @@ import 'package:routrack/tracker/tracker.dart';
 
 import '../../../common/di_mock.dart';
 import '../../../helper.dart';
-import '../../../routine/domain/entities/routine_mocks.dart';
 import '../../../tracker/domain/entities/tracker_mock.dart';
 
 void main() {
@@ -27,8 +26,10 @@ void main() {
     homeBloc = di<HomeBloc>();
     whenListen(
       homeBloc,
-      Stream.value(HomeLoadingSuccess(todayRoutines: [mockTrackableRoutine])),
-      initialState: HomeLoadingSuccess(todayRoutines: [mockTrackableRoutine]),
+      Stream.value(
+        HomeLoadingSuccess(todayRoutines: mockTrackableRoutinesUI),
+      ),
+      initialState: HomeLoadingSuccess(todayRoutines: mockTrackableRoutinesUI),
     );
     when(homeBloc.close).thenAnswer((_) async {});
 
@@ -179,7 +180,7 @@ void main() {
           final widget = tester.widget<TrackableRoutineList>(finder);
 
           expect(finder, findsOneWidget);
-          expect(widget.routines, [mockTrackableRoutine]);
+          expect(widget.trackables, mockTrackableRoutinesUI);
 
           final titleFinder = find.text("Today's routines");
           expect(titleFinder, findsOneWidget);
@@ -208,49 +209,18 @@ void main() {
       testWidgets(
         'shows correct tracked routine when state is loaded',
         (tester) async {
-          final now = DateTime.timestamp();
-          final expectedTracked = TrackableRoutine(
-            routine: mockRoutine,
-            lastTracked: Tracker(
-              id: 'id',
-              routineId: mockRoutine.id,
-              date: now,
-            ),
-          );
-          final trackables = [
-            expectedTracked,
-            ...mockRoutines.map(
-              (it) => TrackableRoutine(
-                routine: it,
-                lastTracked: Tracker(
-                  id: 'tracker-${it.id}',
-                  routineId: it.id,
-                  date: now.subtract(const Duration(days: 1)),
-                ),
-              ),
-            ),
-          ];
-          whenListen(
-            homeBloc,
-            Stream.value(
-              HomeLoadingSuccess(todayRoutines: trackables),
-            ),
-            initialState: HomeLoadingSuccess(
-              todayRoutines: trackables,
-            ),
-          );
           await pumpWidget(tester);
 
-          for (final trackable in trackables) {
+          for (final trackable in mockTrackableRoutinesUI) {
             final finder = find.ancestor(
-              of: find.text(trackable.routine.name),
+              of: find.text(trackable.trackable.routine.name),
               matching: find.byType(TrackableRoutineListTile),
             );
             expect(finder, findsOneWidget);
             await tester.ensureVisible(finder);
 
             final widget = tester.widget<TrackableRoutineListTile>(finder);
-            expect(widget.isTracked, trackable == expectedTracked);
+            expect(widget.isTracked, trackable.isTracked);
           }
         },
       );
@@ -293,7 +263,9 @@ void main() {
           final tileFinder = find.descendant(
             of: listFinder,
             matching: find.ancestor(
-              of: find.text(mockTrackableRoutine.routine.name),
+              of: find.text(
+                mockTrackableRoutinesUI.first.trackable.routine.name,
+              ),
               matching: find.byType(TrackableRoutineListTile),
             ),
           );
@@ -312,7 +284,7 @@ void main() {
           verify(
             () => routineTrackerBloc.add(
               RoutineTrackerTrackRequested(
-                routine: mockTrackableRoutine.routine,
+                routine: mockTrackableRoutinesUI.first.trackable.routine,
                 date: now,
               ),
             ),

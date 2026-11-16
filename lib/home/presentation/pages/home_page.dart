@@ -13,7 +13,7 @@ class HomePage extends StatelessWidget {
 
   void _onTrackableRoutineChanged(
     BuildContext context,
-    TrackableRoutine trackable, {
+    TrackableRoutineUI trackable, {
     required bool isTracked,
   }) {
     if (!isTracked) {
@@ -21,7 +21,7 @@ class HomePage extends StatelessWidget {
     } else {
       context.read<RoutineTrackerBloc>().add(
         RoutineTrackerTrackRequested(
-          routine: trackable.routine,
+          routine: trackable.trackable.routine,
           date: di<AppClock>().getCurrentDateTime(),
         ),
       );
@@ -111,10 +111,7 @@ class HomePage extends StatelessWidget {
                             ),
                             Expanded(
                               child: TrackableRoutineList(
-                                routines: todayRoutines,
-                                isTracked: (trackable) =>
-                                    trackable.lastTracked?.date.day ==
-                                    DateTime.timestamp().day,
+                                trackables: todayRoutines,
                                 onChanged: _onTrackableRoutineChanged,
                               ),
                             ),

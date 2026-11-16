@@ -56,12 +56,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         }
         switch (routinesResult) {
           case AppResultSuccess<List<Routine>>(:final data):
-            final routines = <TrackableRoutine>[];
+            final routines = <TrackableRoutineUI>[];
             for (final routine in data) {
+              final trackable = TrackableRoutine(
+                routine: routine,
+                lastTracked: trackers[routine.id],
+              );
               routines.add(
-                TrackableRoutine(
-                  routine: routine,
-                  lastTracked: trackers[routine.id],
+                TrackableRoutineUI(
+                  trackable: trackable,
+                  isTracked:
+                      trackable.lastTracked?.date.day ==
+                      _clock.getCurrentDateTime().day,
                 ),
               );
             }

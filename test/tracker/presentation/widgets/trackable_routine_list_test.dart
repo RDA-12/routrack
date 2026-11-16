@@ -1,31 +1,20 @@
-import 'package:collection/collection.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:routrack/common/common.dart';
 import 'package:routrack/tracker/tracker.dart';
 
 import '../../../helper.dart';
-import '../../../routine/domain/entities/routine_mocks.dart';
 import '../../domain/entities/tracker_mock.dart';
 
 void main() {
-  final mockTrackableRoutines = mockRoutines
-      .mapIndexed(
-        (index, it) => TrackableRoutine(
-          routine: it,
-          lastTracked: index.isOdd ? mockTracker : null,
-        ),
-      )
-      .toList();
   Future<void> pumpWidget(
     WidgetTester tester, {
-    List<TrackableRoutine>? routines,
+    List<TrackableRoutineUI>? routines,
     OnTracktableRoutineChanged? onChanged,
   }) {
     return tester.pumpWidgetForTest(
       (context) => TrackableRoutineList(
-        routines: routines ?? mockTrackableRoutines,
-        isTracked: (trackable) => trackable.lastTracked != null,
+        trackables: routines ?? mockTrackableRoutinesUI,
         onChanged: onChanged,
       ),
     );
@@ -38,8 +27,8 @@ void main() {
         (tester) async {
           await pumpWidget(tester);
 
-          for (final (index, trackable) in mockTrackableRoutines.indexed) {
-            final routine = trackable.routine;
+          for (final trackable in mockTrackableRoutinesUI) {
+            final routine = trackable.trackable.routine;
             final finder = find.ancestor(
               of: find.text(routine.name),
               matching: find.byType(TrackableRoutineListTile),
@@ -47,7 +36,7 @@ void main() {
             expect(finder, findsOneWidget);
             await tester.ensureVisible(finder);
             final widget = tester.widget<TrackableRoutineListTile>(finder);
-            expect(widget.isTracked, index.isOdd);
+            expect(widget.isTracked, trackable.isTracked);
           }
         },
       );
@@ -74,7 +63,7 @@ void main() {
       testWidgets(
         'calls onPressed when on of routines is pressed',
         (tester) async {
-          TrackableRoutine? pressedTrackable;
+          TrackableRoutineUI? pressedTrackable;
           var value = false;
           await pumpWidget(
             tester,
@@ -85,7 +74,7 @@ void main() {
           );
 
           final finder = find.ancestor(
-            of: find.text(mockRoutines.first.name),
+            of: find.text(mockTrackableRoutinesUI.first.trackable.routine.name),
             matching: find.byType(TrackableRoutineListTile),
           );
           final widget = tester.widget<TrackableRoutineListTile>(finder);
@@ -99,7 +88,7 @@ void main() {
           );
           await tester.tap(confirmButtonFinder);
 
-          expect(pressedTrackable, mockTrackableRoutines.first);
+          expect(pressedTrackable, mockTrackableRoutinesUI.first);
           expect(value, isTrue);
         },
       );

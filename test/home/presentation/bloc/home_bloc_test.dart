@@ -78,7 +78,13 @@ void main() {
           const HomeLoadingData(),
           HomeLoadingSuccess(
             todayRoutines: [
-              TrackableRoutine(routine: mockRoutine, lastTracked: mockTracker),
+              TrackableRoutineUI(
+                trackable: TrackableRoutine(
+                  routine: mockRoutine,
+                  lastTracked: mockTracker,
+                ),
+                isTracked: false,
+              ),
             ],
           ),
         ],
