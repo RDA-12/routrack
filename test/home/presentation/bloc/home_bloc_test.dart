@@ -78,17 +78,24 @@ void main() {
         expect: () => <HomeState>[
           const HomeLoadingData(),
           HomeLoadingSuccess(
-            todayRoutines: mockRoutines.mapIndexed((index, it) {
-              final tracker = mockTrackers[index];
-              final trackable = TrackableRoutine(
-                routine: it,
-                lastTracked: tracker,
-              );
-              return TrackableRoutineUI(
-                trackable: trackable,
-                isTracked: index == 0,
-              );
-            }).toList(),
+            todayRoutines:
+                mockRoutines.mapIndexed((index, it) {
+                  final tracker = mockTrackers[index];
+                  final trackable = TrackableRoutine(
+                    routine: it,
+                    lastTracked: tracker,
+                  );
+                  return TrackableRoutineUI(
+                    trackable: trackable,
+                    isTracked: index == 0,
+                  );
+                }).toList()..sort(
+                  (a, b) => a.isTracked == b.isTracked
+                      ? 0
+                      : a.isTracked
+                      ? 1
+                      : -1,
+                ),
           ),
         ],
       );

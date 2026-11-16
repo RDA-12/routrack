@@ -73,6 +73,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 ),
               );
             }
+            routines.sort(
+              (a, b) => a.isTracked == b.isTracked
+                  ? 0
+                  : a.isTracked
+                  ? 1
+                  : -1,
+            );
             return HomeLoadingSuccess(todayRoutines: routines);
           case AppResultFailed<List<Routine>>(:final exception):
             return HomeLoadingFailed(exception: exception);
