@@ -1,5 +1,4 @@
 import 'package:material_ui/material_ui.dart';
-import 'package:routrack/common/common.dart';
 import 'package:routrack/routine/domain/domain.dart';
 import 'package:routrack/routine/presentation/widgets/weekday_selector.dart';
 
@@ -9,7 +8,10 @@ typedef OnRoutineSaved = void Function(CreateRoutineParams params);
 /// Form to create new routine
 class RoutineForm extends StatefulWidget {
   /// Creates new [RoutineForm]
-  const new({required this.onRoutineSaved, super.key});
+  const new({required this.onRoutineSaved, this.initialRoutine, super.key});
+
+  /// Initial [Routine] that will be showed
+  final Routine? initialRoutine;
 
   /// Invoked when user pressed save button and all routine data are valid
   ///
@@ -22,15 +24,23 @@ class RoutineForm extends StatefulWidget {
 
 class _RoutineFormState extends State<RoutineForm> {
   final formKey = GlobalKey<FormState>();
-  final nameController = TextEditingController();
-  final weekDayController = WeekDaySelectorController();
-  final ValueNotifier<Set<WeekDay>> daysNotifier = ValueNotifier(<WeekDay>{});
+  late final TextEditingController nameController;
+  late final WeekDaySelectorController weekDayController;
+
+  @override
+  void initState() {
+    nameController = TextEditingController(text: widget.initialRoutine?.name);
+    final initialWeekDays = widget.initialRoutine?.weekDays ?? {};
+    weekDayController = WeekDaySelectorController(
+      initialSelected: initialWeekDays,
+    );
+    super.initState();
+  }
 
   @override
   void dispose() {
     nameController.dispose();
     weekDayController.dispose();
-    daysNotifier.dispose();
     super.dispose();
   }
 

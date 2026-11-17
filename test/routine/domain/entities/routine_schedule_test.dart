@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:routrack/common/common.dart';
 import 'package:routrack/routine/routine.dart';
 
 void main() {
@@ -71,6 +72,19 @@ void main() {
           final included = schedule.includes(date);
           expect(included, isTrue, reason: '$date');
         }
+      });
+    });
+
+    group('weekDays', () {
+      test('returns correct data', () {
+        final test = RoutineSchedule(
+          id: 'id',
+          routineId: 'routineId',
+          recurrence: const ['RRULE:FREQ=DAILY;BYDAY=MO,TU,WE,TH'],
+          status: .active,
+        );
+
+        expect(test.weekDays, <WeekDay>{.mon, .tue, .wed, .thu});
       });
     });
   });

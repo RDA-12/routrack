@@ -4,15 +4,18 @@ import 'package:routrack/common/common.dart';
 import 'package:routrack/routine/routine.dart';
 
 import '../../../helper.dart';
+import '../../domain/entities/routine_mocks.dart';
 
 void main() {
   Future<void> pumpWidget(
     WidgetTester tester, {
     OnRoutineSaved? onRoutineSaved,
+    Routine? initialRoutine,
   }) {
     return tester.pumpWidgetForTest((context) {
       return RoutineForm(
         onRoutineSaved: onRoutineSaved,
+        initialRoutine: initialRoutine,
       );
     });
   }
@@ -45,7 +48,7 @@ void main() {
           of: find.text(day.name),
           matching: find.byType(CheckboxListTile),
         );
-      await tester.ensureVisible(finder);
+        await tester.ensureVisible(finder);
         await tester.tap(finder);
       }
     }
@@ -111,6 +114,29 @@ void main() {
 
         expect(finder, findsOneWidget);
       });
+
+      testWidgets(
+        'shows initial name and weekdays when initialRoutine provided',
+        (tester) async {
+          await pumpWidget(tester, initialRoutine: mockRoutine);
+
+          final nameFinder = find.descendant(
+            of: find.byType(TextFormField),
+            matching: find.text(mockRoutine.name),
+          );
+          expect(nameFinder, findsOneWidget);
+
+          for (final day in WeekDay.values) {
+            final tileFinder = find.ancestor(
+              of: find.text(day.name),
+              matching: find.byType(CheckboxListTile),
+            );
+            expect(tileFinder, findsOneWidget);
+            final widget = tester.widget<CheckboxListTile>(tileFinder);
+            expect(widget.value, mockRoutine.weekDays.contains(day));
+          }
+        },
+      );
     });
 
     group('Interactions', () {

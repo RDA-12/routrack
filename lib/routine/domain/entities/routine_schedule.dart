@@ -43,6 +43,13 @@ class RoutineSchedule extends Equatable {
         .isNotEmpty;
   }
 
+  /// Returns Set of [WeekDay] which this schedule scheduled
+  Set<WeekDay> get weekDays {
+    return rrule.byWeekDays.map((it) {
+      return WeekDay.fromInt(it.day);
+    }).toSet();
+  }
+
   @override
   List<Object?> get props => [id, routineId, recurrence, status];
 }

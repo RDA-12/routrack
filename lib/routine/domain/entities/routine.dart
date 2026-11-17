@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:routrack/common/common.dart';
 import 'package:routrack/routine/routine.dart';
 
 /// Represent single user's routine
@@ -23,6 +24,9 @@ class Routine extends Equatable {
   bool includes(DateTime date) {
     return activeSchedule.includes(date);
   }
+
+  /// Returns Set of [WeekDay] this routine must be finished
+  Set<WeekDay> get weekDays => activeSchedule.weekDays;
 
   @override
   List<Object?> get props => [id, name, activeSchedule];

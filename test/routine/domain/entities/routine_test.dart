@@ -73,5 +73,23 @@ void main() {
         }
       });
     });
+
+    group('weekDays', () {
+      test('returns correct data', () {
+        final schedule = RoutineSchedule(
+          id: 'id',
+          routineId: 'routineId',
+          recurrence: const ['RRULE:FREQ=DAILY;BYDAY=MO'],
+          status: .active,
+        );
+        final routine = Routine(
+          id: 'routineId',
+          name: 'routine',
+          activeSchedule: schedule,
+        );
+
+        expect(routine.weekDays, schedule.weekDays);
+      });
+    });
   });
 }
