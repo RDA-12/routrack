@@ -1,7 +1,7 @@
 name: routrack
 description: "Apps to tracks your routines"
 publish_to: "none"
-version: 0.1.1+1
+version: 0.2.0+1
 
 environment:
   sdk: ^3.13.7
