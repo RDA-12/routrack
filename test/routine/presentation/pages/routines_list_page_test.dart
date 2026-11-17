@@ -47,6 +47,15 @@ void main() {
                 key: ValueKey('create-routine'),
               ),
             ),
+            GoRoute(
+              path: ':id',
+              builder: (_, state) {
+                final id = state.pathParameters['id'];
+                return Placeholder(
+                  key: ValueKey('routine-detail-$id'),
+                );
+              },
+            ),
           ],
         ),
       ],
@@ -152,6 +161,31 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(find.byKey(const ValueKey('create-routine')), findsOneWidget);
+        },
+      );
+
+      testWidgets(
+        'go to RoutineDetailPage when on of routine is pressed',
+        (tester) async {
+          whenListen(
+            routinesBloc,
+            Stream.value(RoutinesLoadSuccess(routines: [mockRoutine])),
+            initialState: RoutinesLoadSuccess(routines: [mockRoutine]),
+          );
+          await pumpWidget(tester);
+
+          final finder = find.ancestor(
+            of: find.text(mockRoutine.name),
+            matching: find.byType(RoutineListTile),
+          );
+
+          await tester.tap(finder);
+          await tester.pumpAndSettle();
+
+          expect(
+            find.byKey(ValueKey('routine-detail-${mockRoutine.id}')),
+            findsOneWidget,
+          );
         },
       );
     });

@@ -28,6 +28,11 @@ RouteBase get $homeShellRoute => ShellRouteData.$route(
           parentNavigatorKey: CreateRoutineRoute.$parentNavigatorKey,
           factory: $CreateRoutineRoute._fromState,
         ),
+        GoRouteData.$route(
+          path: ':id',
+          hasOverriddenOnExit: false,
+          factory: $RoutineDetailRoute._fromState,
+        ),
       ],
     ),
   ],
@@ -85,6 +90,30 @@ mixin $CreateRoutineRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/routines/create');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $RoutineDetailRoute on GoRouteData {
+  static RoutineDetailRoute _fromState(GoRouterState state) =>
+      RoutineDetailRoute(id: state.pathParameters['id']!);
+
+  RoutineDetailRoute get _self => this as RoutineDetailRoute;
+
+  @override
+  String get location =>
+      GoRouteData.$location('/routines/${Uri.encodeComponent(_self.id)}');
 
   @override
   void go(BuildContext context) => context.go(location);

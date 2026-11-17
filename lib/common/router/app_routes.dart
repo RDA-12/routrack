@@ -47,6 +47,7 @@ class HomeRoute extends GoRouteData with $HomeRoute {
       path: '/routines',
       routes: [
         TypedGoRoute<CreateRoutineRoute>(path: 'create'),
+        TypedGoRoute<RoutineDetailRoute>(path: ':id'),
       ],
     ),
   ],
@@ -83,4 +84,17 @@ class HomeShellRoute extends ShellRouteData {
       child: navigator,
     );
   }
+}
+
+/// Route for [RoutineDetailPage]
+class RoutineDetailRoute extends GoRouteData with $RoutineDetailRoute {
+  /// Creates new [RoutineDetailRoute]
+  const new({required this.id});
+
+  /// ID of the routine
+  final String id;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      RoutineDetailPage(id: id);
 }

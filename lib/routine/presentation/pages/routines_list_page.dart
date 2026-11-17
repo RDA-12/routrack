@@ -34,6 +34,12 @@ class RoutinesListPage extends StatelessWidget {
                     case RoutinesLoadSuccess(:final routines):
                       return RoutinesList(
                         routines: routines,
+                        onPressed: (context, routine) {
+                          unawaited(
+                            RoutineDetailRoute(id: routine.id)
+                                .push<void>(context),
+                          );
+                        },
                         onCreatePressed: () {
                           unawaited(
                             const CreateRoutineRoute().push<void>(context),
