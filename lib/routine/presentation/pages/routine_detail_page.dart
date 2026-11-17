@@ -23,34 +23,37 @@ class RoutineDetailPage extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Routine detail'),
         ),
-        body: Builder(
-          builder: (context) {
-            return BlocBuilder<SingleRoutineBloc, SingleRoutineState>(
-              builder: (context, state) {
-                switch (state) {
-                  case SingleRoutineInitial():
-                  case SingleRoutineLoadData():
-                    return const Center(
-                      child: LoadingIndicator(),
-                    );
-                  case SingleRoutineLoadSuccess(:final routine):
-                    return RoutineDetail(
-                      routine: routine,
-                      onRoutineSaved: (params) {
-                        // TODO(RDA12): implement update routine
-                      },
-                    );
-                  case SingleRoutineLoadFailed(:final exception):
-                    return Center(
-                      child: AppExceptionBox(
-                        title: 'Failed to load routine data',
-                        exception: exception,
-                      ),
-                    );
-                }
-              },
-            );
-          },
+        body: Padding(
+          padding: AppSpacing.pagePadding,
+          child: Builder(
+            builder: (context) {
+              return BlocBuilder<SingleRoutineBloc, SingleRoutineState>(
+                builder: (context, state) {
+                  switch (state) {
+                    case SingleRoutineInitial():
+                    case SingleRoutineLoadData():
+                      return const Center(
+                        child: LoadingIndicator(),
+                      );
+                    case SingleRoutineLoadSuccess(:final routine):
+                      return RoutineDetail(
+                        routine: routine,
+                        onRoutineSaved: (params) {
+                          // TODO(RDA12): implement update routine
+                        },
+                      );
+                    case SingleRoutineLoadFailed(:final exception):
+                      return Center(
+                        child: AppExceptionBox(
+                          title: 'Failed to load routine data',
+                          exception: exception,
+                        ),
+                      );
+                  }
+                },
+              );
+            },
+          ),
         ),
       ),
     );
