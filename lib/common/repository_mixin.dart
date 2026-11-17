@@ -25,3 +25,9 @@ mixin GetByIdMixin<T> on Repository<T> {
   /// Returns [T] by [id]
   Future<AppResult<T>> getById(String id);
 }
+
+/// Adds [watchById] to the [Repository] to watch for single [T] data
+mixin WatchByIdMixin<T> on Repository<T> {
+  /// Watch for [T] changes with [id]
+  Stream<AppResult<T>> watchById(String id);
+}

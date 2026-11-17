@@ -22,4 +22,5 @@ abstract interface class RoutineRepository extends Repository<Routine>
     with
         SaveMixin<CreateRoutineDBParams, Routine>,
         WatchMixin<Routine>,
-        GetByIdMixin<Routine>;
+        GetByIdMixin<Routine>,
+        WatchByIdMixin<Routine>;

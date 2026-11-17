@@ -130,4 +130,54 @@ final class DriftRoutineRepository with Loggable implements RoutineRepository {
       return AppResult.failed(UnexpectedException(exception: e));
     }
   }
+
+  @override
+  Stream<AppResult<Routine>> watchById(String id) {
+    final query =
+        _db.select(_db.routineTable).join([
+          leftOuterJoin(
+            _db.scheduleTable,
+            _db.routineTable.id.equalsExp(_db.scheduleTable.routineId),
+          ),
+        ])..where(
+          _db.routineTable.id.equals(id) &
+              _db.scheduleTable.status.equalsValue(.active),
+        );
+    logInfo('starts watching for single routine changes');
+    return query
+        .watchSingleOrNull()
+        .map((result) {
+          maybeThrowException(this, Invocation.method(#watchById, [id]));
+          if (result == null) {
+            logInfo('routine not found');
+            return AppResult<Routine>.failed(
+              NotFoundException(entity: .routine, id: id),
+            );
+          }
+          final routineDB = result.readTable(_db.routineTable);
+          final scheduleDB = result.readTable(_db.scheduleTable);
+          logInfo('emit new routine');
+          return AppResult.success(
+            routineDB.toDomain(activeSchedule: scheduleDB.toDomain()),
+          );
+        })
+        .onErrorReturnWith((
+          error,
+          stackTrace,
+        ) {
+          logError(
+            'failed to watch single routine by id',
+            error: error,
+            stackTrace: stackTrace,
+          );
+          if (error is Exception) {
+            return AppResult<Routine>.failed(
+              UnexpectedException(exception: error),
+            );
+          }
+          return AppResult<Routine>.failed(
+            UnexpectedException(exception: Exception('$error')),
+          );
+        });
+  }
 }

@@ -213,5 +213,99 @@ void main() {
         },
       );
     });
+
+    group('watchById', () {
+      const searchedId = '0';
+
+      setUp(() async {
+        for (var i = 0; i < 5; i++) {
+          final returned = await database
+              .into(database.routineTable)
+              .insertReturning(
+                RoutineTableCompanion.insert(
+                  id: '$i',
+                  name: 'routine $i',
+                  createdAt: DateTime.timestamp(),
+                  updatedAt: DateTime.timestamp(),
+                ),
+              );
+          await database
+              .into(database.scheduleTable)
+              .insert(
+                ScheduleTableCompanion.insert(
+                  id: '$i',
+                  createdAt: DateTime.timestamp(),
+                  updatedAt: DateTime.timestamp(),
+                  routineId: returned.id,
+                  recurrence: ['RRULE:FREQ=DAILY;BYDAY=TU'],
+                  status: .active,
+                ),
+              );
+        }
+        await database
+            .into(database.scheduleTable)
+            .insert(
+              ScheduleTableCompanion.insert(
+                id: 'inactive-id',
+                createdAt: DateTime.timestamp(),
+                updatedAt: DateTime.timestamp(),
+                routineId: searchedId,
+                recurrence: ['RRULE:FREQ=DAILY;BYDAY=TU'],
+                status: .inactive,
+              ),
+            );
+      });
+
+      test('emits correct routine when exists', () {
+        final stream = repository.watchById(searchedId);
+
+        expect(
+          stream,
+          emitsInOrder([
+            AppResult.success(
+              Routine(
+                id: searchedId,
+                name: 'routine $searchedId',
+                activeSchedule: RoutineSchedule(
+                  id: searchedId,
+                  routineId: searchedId,
+                  recurrence: const ['RRULE:FREQ=DAILY;BYDAY=TU'],
+                  status: .active,
+                ),
+              ),
+            ),
+          ]),
+        );
+      });
+
+      test('emits failed with NotFoundException when routine not found', () {
+        final stream = repository.watchById('not-exist');
+
+        expect(
+          stream,
+          emitsInOrder([
+            AppResult<Routine>.failed(
+              NotFoundException(entity: .routine, id: 'not-exist'),
+            ),
+          ]),
+        );
+      });
+
+      test('emits failed with correct exception '
+          'when unexpected exception occurred', () {
+        final e = Exception();
+        whenCalling(Invocation.method(#watchById, [searchedId]))
+            .on(repository)
+            .thenThrow(e);
+        final stream = repository.watchById(searchedId);
+
+        expect(
+          stream,
+          emitsInOrder([
+            AppResult<Routine>.failed(UnexpectedException(exception: e)),
+          ]),
+        );
+      });
+    });
   });
 }
