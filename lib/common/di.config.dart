@@ -27,11 +27,15 @@ import 'package:routrack/routine/domain/repositories/repositories.dart'
 import 'package:routrack/routine/domain/use_cases/create_routine.dart' as _i844;
 import 'package:routrack/routine/domain/use_cases/get_routine_by_id.dart'
     as _i961;
+import 'package:routrack/routine/domain/use_cases/watch_routine_by_id.dart'
+    as _i876;
 import 'package:routrack/routine/domain/use_cases/watch_routines.dart'
     as _i1065;
 import 'package:routrack/routine/presentation/bloc/routine_mutation_bloc.dart'
     as _i142;
 import 'package:routrack/routine/presentation/bloc/routines_bloc.dart' as _i215;
+import 'package:routrack/routine/presentation/bloc/single_routine_bloc.dart'
+    as _i862;
 import 'package:routrack/routine/routine.dart' as _i617;
 import 'package:routrack/tracker/data/repositories/drift_tracker_repository.dart'
     as _i825;
@@ -110,6 +114,12 @@ extension GetItInjectableX on _i174.GetIt {
       ),
       registerFor: {_prod},
     );
+    gh.lazySingleton<_i876.WatchRoutineByIdUseCase>(
+      () => _i876.WatchRoutineByIdUseCase(
+        routineRepository: gh<_i541.RoutineRepository>(),
+      ),
+      registerFor: {_prod},
+    );
     gh.lazySingleton<_i1065.WatchRoutines>(
       () => _i1065.WatchRoutines(
         routineRepository: gh<_i547.RoutineRepository>(),
@@ -129,6 +139,12 @@ extension GetItInjectableX on _i174.GetIt {
         watchLatestRoutineTrackerUseCase:
             gh<_i614.WatchLatestRoutineTrackerUseCase>(),
         clock: gh<_i336.AppClock>(),
+      ),
+      registerFor: {_prod},
+    );
+    gh.factory<_i862.SingleRoutineBloc>(
+      () => _i862.SingleRoutineBloc(
+        watchRoutineByIdUseCase: gh<_i617.WatchRoutineByIdUseCase>(),
       ),
       registerFor: {_prod},
     );

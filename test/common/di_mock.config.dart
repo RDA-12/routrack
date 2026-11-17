@@ -60,6 +60,10 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i170.MockWatchRoutines(),
       registerFor: {_test},
     );
+    gh.lazySingleton<_i617.SingleRoutineBloc>(
+      () => _i477.MockSingleRoutineBloc(),
+      registerFor: {_test},
+    );
     gh.lazySingleton<_i181.UidGenerator>(
       () => _i247.MockUidGenerator(),
       registerFor: {_test},
@@ -78,6 +82,10 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i614.WatchLatestRoutineTrackerUseCase>(
       () => _i982.MockWatchLatestRoutineTrackerUseCase(),
+      registerFor: {_test},
+    );
+    gh.lazySingleton<_i617.WatchRoutineByIdUseCase>(
+      () => _i170.MockWatchRoutineByIdUseCase(),
       registerFor: {_test},
     );
     gh.lazySingleton<_i617.RoutinesBloc>(
