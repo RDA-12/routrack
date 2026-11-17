@@ -29,6 +29,7 @@ extension _RRULEExt on CreateRoutineParams {
 /// Use case to create new [Routine]
 @LazySingleton(env: [Environment.prod])
 class CreateRoutineUseCase
+    with Loggable
     implements FutureUseCase<CreateRoutineParams, Routine> {
   /// Creates new [CreateRoutineUseCase]
   const new({required this._routineRepository});
@@ -38,6 +39,7 @@ class CreateRoutineUseCase
   /// Starts creating new [Routine] based on [params]
   @override
   Future<AppResult<Routine>> call(CreateRoutineParams params) {
+    logInfo('delegate routine creation to RoutineRepository');
     return _routineRepository.save(
       CreateRoutineDBParams(name: params.name, recurrence: [params.rrule]),
     );

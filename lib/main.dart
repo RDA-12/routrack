@@ -3,6 +3,7 @@ import 'package:routrack/common/common.dart';
 
 void main() {
   initializeDependencies();
+  AppLogger.initialize();
   runApp(const RoutrackApp());
 }
 

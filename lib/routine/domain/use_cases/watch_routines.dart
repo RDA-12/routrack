@@ -19,6 +19,7 @@ final class WatchRoutinesParams extends Equatable {
 /// Use case to watch for list of [Routine] changes
 @LazySingleton(env: [Environment.prod])
 class WatchRoutines
+    with Loggable
     implements StreamUseCase<WatchRoutinesParams, List<Routine>> {
   /// Creates new [WatchRoutines]
   const new({required this._routineRepository});
@@ -27,12 +28,17 @@ class WatchRoutines
 
   @override
   Stream<AppResult<List<Routine>>> call([WatchRoutinesParams? params]) {
+    logInfo('delegate watching for routines changes to RoutineRepository');
     return _routineRepository.watch().map((result) {
       switch (result) {
         case AppResultFailed<List<Routine>>():
           return result;
         case AppResultSuccess<List<Routine>>(:final data):
           if (params?.date == null) return result;
+          logInfo(
+            'new routines received from RoutineRepository. '
+            'Starts filtering by date',
+          );
           final routines = <Routine>[];
           for (final routine in data) {
             if (!routine.includes(params!.date!)) continue;

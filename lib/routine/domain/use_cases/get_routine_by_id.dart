@@ -6,7 +6,9 @@ import 'package:routrack/routine/domain/repositories/repositories.dart';
 
 /// Use case to get single [Routine] data by its id
 @LazySingleton(env: [Environment.prod])
-class GetRoutineByIdUseCase implements FutureUseCase<String, Routine> {
+class GetRoutineByIdUseCase
+    with Loggable
+    implements FutureUseCase<String, Routine> {
   /// Creates new [GetRoutineByIdUseCase]
   const new({required this._routineRepository});
 
@@ -15,6 +17,7 @@ class GetRoutineByIdUseCase implements FutureUseCase<String, Routine> {
   /// Starts getting the [Routine]
   @override
   Future<AppResult<Routine>> call(String params) {
+    logInfo('delegate getting routine by its id to RoutineRepository');
     return _routineRepository.getById(params);
   }
 }

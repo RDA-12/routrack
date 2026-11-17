@@ -9,7 +9,7 @@ import 'package:rxdart/rxdart.dart';
 
 /// Drift implementation of [RoutineRepository]
 @LazySingleton(env: [Environment.prod], as: RoutineRepository)
-final class DriftRoutineRepository implements RoutineRepository {
+final class DriftRoutineRepository with Loggable implements RoutineRepository {
   /// Creates new [DriftRoutineRepository]
   const new({
     required this._db,
@@ -26,6 +26,7 @@ final class DriftRoutineRepository implements RoutineRepository {
     try {
       maybeThrowException(this, Invocation.method(#save, [params]));
       final now = _clock.getCurrentDateTime();
+      logInfo('starts tracksaction to save new Routine');
       final (newRoutineDB, schedule) = await _db.transaction(() async {
         final newRoutineDB = await _db
             .into(_db.routineTable)
@@ -47,12 +48,14 @@ final class DriftRoutineRepository implements RoutineRepository {
             );
         return (newRoutineDB, schedule);
       });
+      logInfo('new Routine saved');
       return AppResult.success(
         newRoutineDB.toDomain(
           activeSchedule: schedule.toDomain(),
         ),
       );
-    } on Exception catch (e) {
+    } on Exception catch (e, stackTrace) {
+      logError('failed to save routine', error: e, stackTrace: stackTrace);
       return AppResult.failed(UnexpectedException(exception: e));
     }
   }
@@ -65,6 +68,7 @@ final class DriftRoutineRepository implements RoutineRepository {
         _db.scheduleTable.routineId.equalsExp(_db.routineTable.id),
       ),
     ])..where(_db.scheduleTable.status.equalsValue(ScheduleStatus.active));
+    logInfo('starts watching for routines changes');
     return query
         .watch()
         .map((rows) {
@@ -77,9 +81,15 @@ final class DriftRoutineRepository implements RoutineRepository {
               routineDB.toDomain(activeSchedule: scheduleDB.toDomain()),
             );
           }
+          logInfo('emits new routines');
           return AppResult.success(routines);
         })
         .onErrorReturnWith((exception, st) {
+          logError(
+            'failed to watch for routines changes',
+            error: exception,
+            stackTrace: st,
+          );
           if (exception is Exception) {
             return AppResult.failed(
               UnexpectedException(exception: exception),
@@ -101,18 +111,22 @@ final class DriftRoutineRepository implements RoutineRepository {
           _db.routineTable.id.equalsExp(_db.scheduleTable.routineId),
         ),
       ])..where(_db.routineTable.id.equals(id));
+      logInfo('starts get routine by its id');
       final result = await query.getSingleOrNull();
       if (result == null) {
+        logInfo('routine not found');
         return AppResult.failed(NotFoundException(entity: .routine, id: id));
       }
       final routineDB = result.readTable(_db.routineTable);
       final scheduleDB = result.readTable(_db.scheduleTable);
+      logInfo('routine found');
       return AppResult.success(
         routineDB.toDomain(
           activeSchedule: scheduleDB.toDomain(),
         ),
       );
-    } on Exception catch (e) {
+    } on Exception catch (e, stackTrace) {
+      logError('failed to get routine', error: e, stackTrace: stackTrace);
       return AppResult.failed(UnexpectedException(exception: e));
     }
   }

@@ -1,4 +1,5 @@
 export 'app_clock.dart';
+export 'app_logger.dart';
 export 'base_use_case.dart';
 export 'bloc/bloc.dart';
 export 'database/database.dart';

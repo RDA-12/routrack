@@ -24,6 +24,7 @@ final class TrackRoutineParams extends Equatable {
 /// Use case to track a routine
 @LazySingleton(env: [Environment.prod])
 class TrackRoutineUseCase
+    with Loggable
     implements FutureUseCase<TrackRoutineParams, Tracker> {
   /// Creates new [TrackRoutineUseCase]
   const new({
@@ -37,12 +38,15 @@ class TrackRoutineUseCase
   /// Starts creating new tracker
   @override
   Future<AppResult<Tracker>> call(TrackRoutineParams params) async {
+    logInfo('delegating to get routine to GetRoutineByIdUseCase');
     final routineResult = await _getRoutineByIdUseCase(params.routineId);
     switch (routineResult) {
       case AppResultFailed<Routine>(:final exception):
+        logInfo('failed to get routine');
         return AppResult.failed(exception);
       case AppResultSuccess<Routine>(:final data):
         if (!data.includes(params.date)) {
+          logInfo('routine not scheduled for requested date');
           return AppResult.failed(
             UnexpectedException(
               exception: Exception(
@@ -52,6 +56,7 @@ class TrackRoutineUseCase
           );
         }
     }
+    logInfo('delegating save new Tracker to TrackerRepository');
     return await _trackerRepository.save(params);
   }
 }

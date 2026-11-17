@@ -13,7 +13,7 @@ part 'home_state.dart';
 
 /// Bloc to read data needed by Home page
 @Injectable(env: [Environment.prod])
-class HomeBloc extends Bloc<HomeEvent, HomeState> {
+class HomeBloc extends Bloc<HomeEvent, HomeState> with Loggable {
   /// Creates new [HomeBloc]
   new({
     required this._watchRoutines,
@@ -34,10 +34,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     HomeSubscriptionRequested event,
     Emitter<HomeState> emit,
   ) async {
+    logInfo('HomeSubscriptionRequested event received. Emits loading state');
     emit(const HomeLoadingData());
 
+    logInfo('delegate watching routines to WatchRoutines');
     final routinesStream = _watchRoutines(
       WatchRoutinesParams(date: _clock.getCurrentDateTime()),
+    );
+    logInfo(
+      'delegate watching latest tracker per routine '
+      'to WatchLatestRoutineTrackerUseCase',
     );
     final trackersStream = _watchLatestRoutineTrackerUseCase();
     final stream = CombineLatestStream.combine2(
@@ -52,6 +58,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               trackers[tracker.routineId] = tracker;
             }
           case AppResultFailed<List<Tracker>>(:final exception):
+            logInfo('trackers stream emits failed. Emits failed state');
             return HomeLoadingFailed(exception: exception);
         }
         switch (routinesResult) {
@@ -82,6 +89,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             );
             return HomeLoadingSuccess(todayRoutines: routines);
           case AppResultFailed<List<Routine>>(:final exception):
+            logInfo('routines stream emits failed. Emits failed state');
             return HomeLoadingFailed(exception: exception);
         }
       },

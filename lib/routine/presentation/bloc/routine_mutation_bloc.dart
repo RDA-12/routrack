@@ -11,7 +11,8 @@ part 'routine_mutation_state.dart';
 /// Bloc to mutate Routine data
 @Injectable(env: [Environment.prod])
 class RoutineMutationBloc
-    extends Bloc<RoutineMutationEvent, RoutineMutationState> {
+    extends Bloc<RoutineMutationEvent, RoutineMutationState>
+    with Loggable {
   /// Creates new [RoutineMutationBloc]
   new({required this._createRoutineUseCase})
     : super(const RoutineMutationState()) {
@@ -24,17 +25,23 @@ class RoutineMutationBloc
     RoutineMutationCreationRequested event,
     Emitter<RoutineMutationState> emit,
   ) async {
+    logInfo(
+      'RoutineMutationCreationRequested event received. Emits loading state',
+    );
     emit(const RoutineMutationState(isCreating: true));
 
+    logInfo('delegating routine creation to CreateRoutineUseCase');
     final result = await _createRoutineUseCase(event.params);
     switch (result) {
       case AppResultSuccess<Routine>(:final data):
+        logInfo('routine created. Emits Created notice');
         emit(
           RoutineMutationState(
             notice: CreatedNoticeUI(data: data),
           ),
         );
       case AppResultFailed<Routine>(:final exception):
+        logInfo('routine creation failed. Emits Failed notice');
         emit(
           RoutineMutationState(
             notice: FailedNoticeUI(

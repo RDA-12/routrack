@@ -10,7 +10,7 @@ import 'package:rxdart/rxdart.dart';
 
 /// Drift implementation of [TrackerRepository]
 @LazySingleton(env: [Environment.prod], as: TrackerRepository)
-final class DriftTrackerRepository implements TrackerRepository {
+final class DriftTrackerRepository with Loggable implements TrackerRepository {
   /// Creates new [DriftTrackerRepository]
   const new({
     required this._db,
@@ -34,17 +34,22 @@ final class DriftTrackerRepository implements TrackerRepository {
               createdAt: _clock.getCurrentDateTime(),
             ),
           );
+      logInfo('starts creating new Tracker');
       final trackerDB = await query;
+      logInfo('Tracker created');
       return AppResult.success(trackerDB.toDomain());
-    } on SqliteException catch (e) {
+    } on SqliteException catch (e, stackTrace) {
       final code = e.resultCode;
       if (code == 19) {
+        logInfo('Routine not found for requested Tracker');
         return AppResult.failed(
           NotFoundException(entity: .routine, id: params.routineId),
         );
       }
+      logError('failed to create Tracker', error: e, stackTrace: stackTrace);
       return AppResult.failed(UnexpectedException(exception: e));
-    } on Exception catch (e) {
+    } on Exception catch (e, stackTrace) {
+      logError('failed to create Tracker', error: e, stackTrace: stackTrace);
       return AppResult.failed(UnexpectedException(exception: e));
     }
   }
@@ -76,6 +81,7 @@ final class DriftTrackerRepository implements TrackerRepository {
       ),
     ]);
 
+    logInfo('start watching latest Tracker per Routine');
     return query
         .watch()
         .map((rows) {
@@ -89,9 +95,15 @@ final class DriftTrackerRepository implements TrackerRepository {
               row.readTable(_db.trackerTable).toDomain(),
             );
           }
+          logInfo('new trackers received. Emits new trackers');
           return AppResult.success(trackers);
         })
         .onErrorReturnWith((exception, st) {
+          logError(
+            'failed received. Emits failed result',
+            error: exception,
+            stackTrace: st,
+          );
           if (exception is Exception) {
             return AppResult.failed(UnexpectedException(exception: exception));
           }
