@@ -31,6 +31,7 @@ RouteBase get $homeShellRoute => ShellRouteData.$route(
         GoRouteData.$route(
           path: ':id',
           hasOverriddenOnExit: false,
+          parentNavigatorKey: RoutineDetailRoute.$parentNavigatorKey,
           factory: $RoutineDetailRoute._fromState,
         ),
       ],

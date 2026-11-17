@@ -94,6 +94,9 @@ class RoutineDetailRoute extends GoRouteData with $RoutineDetailRoute {
   /// ID of the routine
   final String id;
 
+  /// This route parent nav key
+  static final GlobalKey<NavigatorState> $parentNavigatorKey = rootNavigatorKey;
+
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       RoutineDetailPage(id: id);
